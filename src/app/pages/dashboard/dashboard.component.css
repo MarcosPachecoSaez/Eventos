@@ -1,0 +1,68 @@
+/* src/app/pages/dashboard/dashboard.component.css */
+
+/* Barra superior */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0056b3;
+    color: white;
+    padding: 15px 30px;
+    font-size: 20px;
+  }
+  
+  /* Botón cerrar sesión */
+  .navbar button {
+    background-color: white;
+    color: #0056b3;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  
+  .navbar button:hover:not(:disabled) {
+    background-color: #dbe9ff;
+  }
+  
+  /* Contenido principal */
+  .contenido {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .contenido h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+  }
+  
+  .contenido p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 40px;
+  }
+  
+  /* Botones de acciones */
+  .acciones {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .acciones button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .acciones button:hover {
+    background-color: #0056b3;
+  }
+  

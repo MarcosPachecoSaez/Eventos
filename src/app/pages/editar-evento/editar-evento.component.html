@@ -1,0 +1,43 @@
+<div class="contenedor-editar">
+    <h2>Editar Evento</h2>
+  
+    <form [formGroup]="eventoForm" (ngSubmit)="actualizarEvento()">
+      <div>
+        <label for="nombre">Nombre:</label>
+        <input id="nombre" formControlName="nombre" type="text" />
+      </div>
+  
+      <div>
+        <label for="descripcion">Descripción:</label>
+        <textarea id="descripcion" formControlName="descripcion"></textarea>
+      </div>
+  
+      <div>
+        <label for="fecha">Fecha:</label>
+        <input id="fecha" formControlName="fecha" type="date" />
+      </div>
+  
+      <div>
+        <label for="lugar">Lugar:</label>
+        <input id="lugar" formControlName="lugar" type="text" />
+      </div>
+  
+      <div>
+        <label for="categoria">Categoría:</label>
+        <input id="categoria" formControlName="categoria" type="text" />
+      </div>
+  
+      <div>
+        <label for="precio">Precio:</label>
+        <input id="precio" formControlName="precio" type="number" />
+      </div>
+  
+      <div>
+        <label for="imagen_url">Imagen URL:</label>
+        <input id="imagen_url" formControlName="imagen_url" type="text" />
+      </div>
+  
+      <button type="submit" [disabled]="eventoForm.invalid">Actualizar Evento</button>
+    </form>
+  </div>
+  

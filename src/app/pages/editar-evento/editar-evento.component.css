@@ -1,0 +1,50 @@
+.editar-evento-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 25px;
+    background-color: #e0f0ff; /* Celeste clarito */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+  }
+  
+  h2 {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 20px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #0056b3;
+  }
+  
+  input, textarea {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #fff;
+  }
+  
+  button {
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  

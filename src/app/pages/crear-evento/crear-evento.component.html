@@ -1,0 +1,26 @@
+<h2>Crear Nuevo Evento</h2>
+
+<form (ngSubmit)="crearEvento()" #form="ngForm" class="form-crear-evento">
+  <label>Nombre:</label>
+  <input type="text" [(ngModel)]="evento.nombre" name="nombre" required>
+
+  <label>Descripción:</label>
+  <textarea [(ngModel)]="evento.descripcion" name="descripcion" required></textarea>
+
+  <label>Fecha:</label>
+  <input type="date" [(ngModel)]="evento.fecha" name="fecha" required>
+
+  <label>Lugar:</label>
+  <input type="text" [(ngModel)]="evento.lugar" name="lugar" required>
+
+  <label>Categoría:</label>
+  <input type="text" [(ngModel)]="evento.categoria" name="categoria" required>
+
+  <label>Precio:</label>
+  <input type="number" [(ngModel)]="evento.precio" name="precio" required>
+
+  <label>Imagen URL:</label>
+  <input type="text" [(ngModel)]="evento.imagen_url" name="imagen_url" required>
+
+  <button type="submit" [disabled]="form.invalid">Crear Evento</button>
+</form>

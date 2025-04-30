@@ -1,0 +1,22 @@
+<!-- src/app/pages/dashboard/dashboard.component.html -->
+
+<header class="navbar">
+    <div class="logo">🎟️ TicketEventos</div>
+    <button (click)="cerrarSesion()" [disabled]="cargando">
+      <span *ngIf="!cargando">Cerrar Sesión</span>
+      <span *ngIf="cargando">Cerrando...</span>
+    </button>
+  </header>
+  
+  <main class="contenido">
+    <h1>¡Bienvenido, {{ usuario }}!</h1>
+    <p>¿Qué evento quieres descubrir hoy?</p>
+  
+    <div class="acciones">
+        <button (click)="irACrearEvento()">Crear Evento</button>
+        <button (click)="irABuscarEventos()">Buscar Eventos</button>
+        <button>Mis Entradas</button>
+      <button>Perfil</button>
+    </div>
+  </main>
+  

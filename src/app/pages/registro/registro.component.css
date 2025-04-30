@@ -1,0 +1,50 @@
+form {
+    background-color: #e0f0ff; /* Fondo celeste clarito */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.2);
+    max-width: 400px;
+    margin: 50px auto;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  input {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+  
+  button {
+    padding: 12px;
+    background-color: #007bff; /* Azul fuerte */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:disabled {
+    background-color: #7ab8ff; /* Azul más clarito cuando está deshabilitado */
+    cursor: not-allowed;
+  }
+  
+  button:hover:not(:disabled) {
+    background-color: #0056b3; /* Azul oscuro en hover */
+  }
+  h2 {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 20px;
+  }
+  
