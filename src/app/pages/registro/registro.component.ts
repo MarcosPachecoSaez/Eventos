@@ -1,4 +1,3 @@
-// registro.component.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -17,7 +16,8 @@ export class RegistroComponent {
     nombre: '',
     email: '',
     contrasena: '',
-    edad: ''
+    edad: '',
+    rol: 'cliente' // 👈 valor fijo por ahora
   };
 
   constructor(private supabaseService: SupabaseService, private router: Router) {}
@@ -29,27 +29,29 @@ export class RegistroComponent {
     }
 
     try {
-      // Crear usuario en Supabase Auth
-      const result = await this.supabaseService.registrarUsuario(
+      const { data, error } = await this.supabaseService.registrarUsuario(
         this.usuario.email,
         this.usuario.contrasena
       );
       
-      if (!result.user) {
-        throw new Error('Error al registrar usuario');
+      if (error || !data.user) {
+        throw new Error(error?.message || 'Error al registrar usuario');
       }
       
-      // Insertar los datos del usuario en la tabla 'usuario'
+      
       const usuarioConvertido = {
+        id: data.user.id,
         nombre: this.usuario.nombre,
-        email: this.usuario.email,
-        edad: Number(this.usuario.edad)
+        correo: this.usuario.email,
+        rol: 'cliente',
+        edad: Number(this.usuario.edad) // 👈 solo si la tabla lo permite
       };
+      
+      
 
-      const insertResult = await this.supabaseService.insertarUsuario(usuarioConvertido);
-      console.log('✅ Usuario registrado con éxito:', insertResult);
+      await this.supabaseService.insertarPerfilUsuario(usuarioConvertido);
+      console.log('✅ Usuario registrado con éxito');
 
-      // Redirigir al login
       this.router.navigate(['/login']);
     } catch (error: any) {
       console.error('❌ Error al registrar usuario:', error.message || error);
@@ -57,3 +59,4 @@ export class RegistroComponent {
     }
   }
 }
+export default RegistroComponent;

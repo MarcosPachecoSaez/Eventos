@@ -1,7 +1,8 @@
+import { SupabaseClient } from '@supabase/supabase-js';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SupabaseService } from '../../services/supabase/supabase.service'; // Ojo con ruta correcta
-import { Router } from '@angular/router'; // <-- Agregado para redirigir en editar
+import { SupabaseService } from '../../services/supabase/supabase.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-eventos',
@@ -16,36 +17,36 @@ export class EventosComponent implements OnInit {
   eventoSeleccionado: any = null;
   mostrarModal: boolean = false;
 
-  constructor(private supabaseService: SupabaseService, private router: Router) {}
+  constructor(
+    private supabaseService: SupabaseService,
+    private router: Router
+  ) {}
 
-  ngOnInit(): void {
-    this.obtenerEventos();
+  async ngOnInit(): Promise<void> {
+    await this.obtenerEventos();
   }
 
   async obtenerEventos() {
     this.cargando = true;
     try {
-      const { data, error } = await this.supabaseService.getClient()
+      // ✅ Usamos el método público del servicio (getClient o supabaseClient)
+      const { data, error } = await this.supabaseService.client
         .from('eventos')
-        .select('*');
-  
-      console.log('Eventos obtenidos:', data);
-  
-      if (error) {
-        console.error('❌ Error cargando eventos:', error.message);
-        this.eventos = [];
-        return;
-      }
-  
-      this.eventos = data ?? [];
-    } catch (error) {
-      console.error('❌ Error desconocido cargando eventos:', (error as Error).message);
+        .select('*')
+        .order('fecha', { ascending: true });
+
+      if (error) throw error;
+
+      this.eventos = data || [];
+    } catch (error: any) {
+      console.error('Error al obtener eventos:', error.message);
       this.eventos = [];
+      alert('Error al cargar eventos');
     } finally {
       this.cargando = false;
     }
   }
-  
+
   abrirModal(evento: any) {
     this.eventoSeleccionado = evento;
     this.mostrarModal = true;
@@ -58,24 +59,27 @@ export class EventosComponent implements OnInit {
 
   editarEvento(evento: any) {
     this.router.navigate(['/editar-evento', evento.id]);
-  }  
-  
-  
+  }
+
   async eliminarEvento(id: string) {
-    if (confirm('¿Estás seguro de eliminar este evento?')) {
-      const { error } = await this.supabaseService.getClient()
+    if (!confirm('¿Estás seguro de eliminar este evento?')) return;
+
+    try {
+      // ✅ Usamos el método público del servicio
+      const { error } = await this.supabaseService.client
         .from('eventos')
         .delete()
         .eq('id', id);
 
-      if (error) {
-        console.error('❌ Error al eliminar evento:', error.message);
-        alert('Error eliminando el evento.');
-      } else {
-        alert('✅ Evento eliminado con éxito.');
-        this.cerrarModal();
-        this.obtenerEventos();
-      }
+      if (error) throw error;
+
+      alert('✅ Evento eliminado con éxito');
+      this.obtenerEventos(); // Refrescar la lista
+      this.cerrarModal();
+    } catch (error: any) {
+      console.error('Error al eliminar evento:', error.message);
+      alert('Error al eliminar evento');
     }
   }
 }
+export default EventosComponent ;

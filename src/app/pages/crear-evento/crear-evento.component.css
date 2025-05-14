@@ -1,38 +1,84 @@
-.form-crear-evento {
-    max-width: 400px;
-    margin: 20px auto;
-    background: #e0f7fa; /* Celeste claro */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+main.contenido {
+  padding: 1rem;
+  max-width: 100%;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.acciones button {
+  flex: 1 1 45%;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+/* Admin */
+.filtros {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.filtros label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+}
+.filtros input {
+  padding: 4px;
+}
+.evento {
+  border: 1px solid #ccc;
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 6px;
+}
+
+/* Cliente */
+.evento-cliente {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.evento-img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+}
+.evento-info {
+  padding: 1rem;
+}
+.evento-info h4 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+.evento-info button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+@media (min-width: 600px) {
+  .filtros {
+    flex-direction: row;
+    align-items: end;
   }
-  
-  .form-crear-evento label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+
+  .filtros label {
+    flex: 1;
   }
-  
-  .form-crear-evento input,
-  .form-crear-evento textarea {
-    width: 100%;
-    margin-bottom: 15px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .form-crear-evento button {
-    width: 100%;
-    padding: 10px;
-    background-color: #00bcd4;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .form-crear-evento button:hover {
-    background-color: #0097a7;
-  }
-  
+}

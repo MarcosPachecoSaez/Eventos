@@ -1,68 +1,76 @@
-/* src/app/pages/dashboard/dashboard.component.css */
+.dashboard-container {
+  max-width: 1024px;
+  margin: auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+}
 
-/* Barra superior */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #0056b3;
-    color: white;
-    padding: 15px 30px;
-    font-size: 20px;
-  }
-  
-  /* Botón cerrar sesión */
-  .navbar button {
-    background-color: white;
-    color: #0056b3;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 30px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-  }
-  
-  .navbar button:hover:not(:disabled) {
-    background-color: #dbe9ff;
-  }
-  
-  /* Contenido principal */
-  .contenido {
-    text-align: center;
-    margin-top: 50px;
-  }
-  
-  .contenido h1 {
-    font-size: 36px;
-    margin-bottom: 10px;
-  }
-  
-  .contenido p {
-    font-size: 18px;
-    color: #666;
-    margin-bottom: 40px;
-  }
-  
-  /* Botones de acciones */
-  .acciones {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-  }
-  
-  .acciones button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 15px 25px;
-    border-radius: 30px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .acciones button:hover {
-    background-color: #0056b3;
-  }
-  
+.bienvenida {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.subtitulo {
+  color: #666;
+  font-size: 1rem;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+.acciones button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: #0066ff;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.admin-eventos, .cliente-eventos {
+  margin-top: 2rem;
+}
+
+.filtros {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.filtros input {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.evento-card, .evento-cliente {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.evento-card .acciones {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.evento-card .eliminar {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.evento-img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}

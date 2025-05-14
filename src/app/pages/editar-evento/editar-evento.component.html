@@ -1,43 +1,42 @@
-<div class="contenedor-editar">
-    <h2>Editar Evento</h2>
-  
-    <form [formGroup]="eventoForm" (ngSubmit)="actualizarEvento()">
-      <div>
-        <label for="nombre">Nombre:</label>
-        <input id="nombre" formControlName="nombre" type="text" />
-      </div>
-  
-      <div>
-        <label for="descripcion">Descripción:</label>
-        <textarea id="descripcion" formControlName="descripcion"></textarea>
-      </div>
-  
-      <div>
-        <label for="fecha">Fecha:</label>
-        <input id="fecha" formControlName="fecha" type="date" />
-      </div>
-  
-      <div>
-        <label for="lugar">Lugar:</label>
-        <input id="lugar" formControlName="lugar" type="text" />
-      </div>
-  
-      <div>
-        <label for="categoria">Categoría:</label>
-        <input id="categoria" formControlName="categoria" type="text" />
-      </div>
-  
-      <div>
-        <label for="precio">Precio:</label>
-        <input id="precio" formControlName="precio" type="number" />
-      </div>
-  
-      <div>
-        <label for="imagen_url">Imagen URL:</label>
-        <input id="imagen_url" formControlName="imagen_url" type="text" />
-      </div>
-  
-      <button type="submit" [disabled]="eventoForm.invalid">Actualizar Evento</button>
-    </form>
-  </div>
-  
+<h2>Editar evento</h2>
+
+<form [formGroup]="formulario" (ngSubmit)="actualizarEvento()" *ngIf="!cargando">
+  <label>
+    Nombre:
+    <input formControlName="nombre" />
+  </label>
+
+  <label>
+    Descripción:
+    <textarea formControlName="descripcion"></textarea>
+  </label>
+
+  <label>
+    Fecha:
+    <input type="datetime-local" formControlName="fecha" />
+  </label>
+
+  <label>
+    Lugar:
+    <input formControlName="lugar" />
+  </label>
+
+  <label>
+    Categoría:
+    <input formControlName="categoria" />
+  </label>
+
+  <label>
+    Precio:
+    <input type="number" formControlName="precio" />
+  </label>
+
+  <label>
+    Imagen (URL):
+    <input formControlName="imagen_url" />
+  </label>
+
+  <button type="submit" [disabled]="formulario.invalid">Actualizar Evento</button>
+</form>
+
+<p *ngIf="mensaje">{{ mensaje }}</p>

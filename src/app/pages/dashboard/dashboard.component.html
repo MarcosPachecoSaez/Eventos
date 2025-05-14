@@ -1,22 +1,57 @@
-<!-- src/app/pages/dashboard/dashboard.component.html -->
+<app-navbar></app-navbar>
 
-<header class="navbar">
-    <div class="logo">🎟️ TicketEventos</div>
-    <button (click)="cerrarSesion()" [disabled]="cargando">
-      <span *ngIf="!cargando">Cerrar Sesión</span>
-      <span *ngIf="cargando">Cerrando...</span>
-    </button>
-  </header>
-  
-  <main class="contenido">
-    <h1>¡Bienvenido, {{ usuario }}!</h1>
-    <p>¿Qué evento quieres descubrir hoy?</p>
-  
-    <div class="acciones">
-        <button (click)="irACrearEvento()">Crear Evento</button>
-        <button (click)="irABuscarEventos()">Buscar Eventos</button>
-        <button>Mis Entradas</button>
-      <button>Perfil</button>
+<main class="dashboard-container">
+  <section class="bienvenida">
+    <h1>Hola, {{ usuario }} 👋</h1>
+    <p class="subtitulo">Explora y administra los eventos desde tu panel personal</p>
+  </section>
+
+  <section class="acciones">
+    <button *ngIf="esAdmin()" (click)="irACrearEvento()">➕ Crear Evento</button>
+    <button (click)="irABuscarEventos()">🔍 Buscar Eventos</button>
+    <button>🎫 Mis Entradas</button>
+    <button>👤 Perfil</button>
+  </section>
+
+  <!-- 🔒 ADMIN: Gestión de eventos -->
+  <section *ngIf="esAdmin() && eventos.length > 0" class="admin-eventos">
+    <h2>🗂️ Eventos publicados</h2>
+
+    <div class="filtros">
+      <input [(ngModel)]="filtroCategoria" placeholder="Filtrar por categoría" />
+      <input type="date" [(ngModel)]="filtroFecha" />
+      <button (click)="filtrarEventos()">Filtrar</button>
+      <button (click)="limpiarFiltros()">Limpiar</button>
     </div>
-  </main>
-  
+
+    <div class="evento-card" *ngFor="let evento of eventos">
+      <div class="info">
+        <h3>{{ evento.nombre }}</h3>
+        <p>{{ evento.descripcion }}</p>
+        <p>📅 {{ evento.fecha | date:'short' }}</p>
+        <p>📍 {{ evento.lugar }}</p>
+      </div>
+      <div class="acciones">
+        <button (click)="irAEditar(evento.id)">✏️ Editar</button>
+        <button (click)="eliminarEvento(evento.id)" class="eliminar">🗑️ Eliminar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 👤 CLIENTE: Eventos disponibles -->
+  <section *ngIf="esCliente() && eventos.length > 0" class="cliente-eventos">
+    <h2>🎟️ Eventos disponibles</h2>
+
+    <div class="evento-cliente" *ngFor="let evento of eventos">
+      <img *ngIf="evento.imagen_url" [src]="evento.imagen_url" alt="Evento" class="evento-img" />
+      <div class="contenido">
+        <h3>{{ evento.nombre }}</h3>
+        <p>{{ evento.descripcion }}</p>
+        <p>📅 {{ evento.fecha | date:'short' }}</p>
+        <p>📍 {{ evento.lugar }}</p>
+        <p>💲 {{ evento.precio | currency:'CLP' }}</p>
+        <button>Ver detalles</button>
+      </div>
+    </div>
+  </section>
+</main>

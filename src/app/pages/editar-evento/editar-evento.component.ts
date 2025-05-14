@@ -1,85 +1,78 @@
-// src/app/pages/editar-evento/editar-evento.component.ts
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SupabaseService } from '../../services/supabase/supabase.service'; // Asegúrate que esta ruta esté correcta
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SupabaseService } from '../../services/supabase/supabase.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-editar-evento',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule], // <-- Agregamos ReactiveFormsModule aquí
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './editar-evento.component.html',
-  styleUrls: ['./editar-evento.component.css'],
+  styleUrls: ['./editar-evento.component.css']
 })
 export class EditarEventoComponent implements OnInit {
-  eventoForm!: FormGroup;
   eventoId: string = '';
-  evento: any = null;
+  cargando = true;
+  mensaje = '';
+  formulario!: FormGroup;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private supabaseService: SupabaseService,
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
     private router: Router,
-    private fb: FormBuilder
+    private supabase: SupabaseService
   ) {}
 
-  ngOnInit(): void {
-    this.eventoForm = this.fb.group({
+  async ngOnInit() {
+    this.formulario = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
       fecha: ['', Validators.required],
       lugar: ['', Validators.required],
       categoria: ['', Validators.required],
       precio: ['', [Validators.required, Validators.min(0)]],
-      imagen_url: ['', Validators.required],
+      imagen_url: ['']
     });
 
-    // Obtener ID del evento desde la URL
-    this.eventoId = this.activatedRoute.snapshot.paramMap.get('id')!;
-    this.cargarEvento();
-  }
-
-  async cargarEvento() {
-    try {
-      const { data, error } = await this.supabaseService.getClient()
-        .from('eventos')
-        .select('*')
-        .eq('id', this.eventoId)
-        .single();
-
-      if (error) {
-        console.error('Error al cargar evento:', error.message);
-        return;
-      }
-
-      this.evento = data;
-      this.eventoForm.patchValue(this.evento); // Carga los valores en el formulario
-    } catch (error) {
-      console.error('Error desconocido al cargar evento:', error);
+    this.eventoId = this.route.snapshot.paramMap.get('id') ?? '';
+    if (!this.eventoId) {
+      this.mensaje = '❌ ID inválido';
+      this.cargando = false;
+      return;
     }
+
+    const { data, error } = await this.supabase.client
+      .from('eventos')
+      .select('*')
+      .eq('id', this.eventoId)
+      .single();
+
+    if (error || !data) {
+      this.mensaje = '❌ Error al cargar evento';
+      this.cargando = false;
+      return;
+    }
+
+    this.formulario.patchValue(data);
+    this.cargando = false;
   }
 
   async actualizarEvento() {
-    if (this.eventoForm.invalid) {
-      alert('Por favor, completa todos los campos correctamente.');
-      return;
-    }
+    if (this.formulario.invalid) return;
 
-    const { nombre, descripcion, fecha, lugar, categoria, precio, imagen_url } = this.eventoForm.value;
-
-    const { error } = await this.supabaseService.getClient()
+    const { error } = await this.supabase.client
       .from('eventos')
-      .update({ nombre, descripcion, fecha, lugar, categoria, precio, imagen_url })
+      .update(this.formulario.value)
       .eq('id', this.eventoId);
 
     if (error) {
-      console.error('Error al actualizar evento:', error.message);
-      alert('Error al actualizar el evento.');
-      return;
+      this.mensaje = '❌ Error al actualizar evento';
+      console.error(error);
+    } else {
+      this.mensaje = '✅ Evento actualizado';
+      this.router.navigate(['/dashboard']);
     }
-
-    alert('Evento actualizado con éxito');
-    this.router.navigate(['/eventos']); // Redirige al listado de eventos
   }
 }
+export default EditarEventoComponent ;

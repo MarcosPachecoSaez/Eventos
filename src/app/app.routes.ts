@@ -1,25 +1,63 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './pages/login/login.component'; 
-import { RegistroComponent } from './pages/registro/registro.component'; 
-import { DashboardComponent } from './pages/dashboard/dashboard.component'; 
-import { authGuard } from './auth/auth.guard'; 
+import { adminGuard } from './guards/admin.guard';
+import { clienteGuard } from './guards/cliente.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirección inicial al login
-  { path: 'login', component: LoginComponent },         // Página de login
-  { path: 'registro', component: RegistroComponent },   // Página de registro
-  { 
-    path: 'dashboard', 
-    component: DashboardComponent, 
-    canActivate: [authGuard]                            // Protege la ruta con el guard
-  },
-  
-  {  path: 'recuperar-contrasena',
-    loadComponent: () => import('./auth/recuperar.component').then(m => m.RecuperarComponent)
+  {
+    path: '',
+    loadComponent: () =>
+      import('./pages/home/home.component').then(m => m.default)
   },
   {
-    path: 'cambiar-contrasena',
-    loadComponent: () => import('./auth/cambiar.component').then(m => m.CambiarComponent)
+    path: 'home',
+    loadComponent: () =>
+      import('./pages/home/home.component').then(m => m.default)
+  },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./pages/login/login.component').then(m => m.default)
+  },
+  {
+    path: 'registro',
+    loadComponent: () =>
+      import('./pages/registro/registro.component').then(m => m.default)
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./pages/dashboard/dashboard.component').then(m => m.default)
+  },
+  {
+    path: 'crear-evento',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./pages/crear-evento/crear-evento.component').then(m => m.default)
+  },
+  {
+    path: 'editar-evento/:id',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./pages/editar-evento/editar-evento.component').then(m => m.default)
+  },
+  {
+    path: 'eventos',
+    canActivate: [clienteGuard],
+    loadComponent: () =>
+      import('./pages/eventos/eventos.component').then(m => m.default)
+  },
+  {
+    path: 'evento/:id',
+    loadComponent: () =>
+      import('./pages/evento-detalle/evento-detalle.component').then(m => m.default)
+  },
+  {
+    path: 'no-autorizado',
+    loadComponent: () =>
+      import('./pages/no-autorizado/no-autorizado.component').then(m => m.default)
+  },
+  {
+    path: '**',
+    redirectTo: ''
   }
-  
 ];

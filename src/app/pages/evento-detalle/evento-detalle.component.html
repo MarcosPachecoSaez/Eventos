@@ -1,0 +1,19 @@
+<div *ngIf="cargando" class="cargando">
+    <p>Cargando evento...</p>
+  </div>
+  
+  <div *ngIf="!cargando && evento" class="evento-detalle">
+    <img [src]="evento.imagen_url" *ngIf="evento.imagen_url" alt="Imagen del evento" class="evento-img" />
+  
+    <div class="detalle-contenido">
+      <h2>{{ evento.nombre }}</h2>
+      <p><strong>Descripción:</strong> {{ evento.descripcion }}</p>
+      <p><strong>Fecha:</strong> {{ evento.fecha | date: 'full' }}</p>
+      <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
+      <p><strong>Categoría:</strong> {{ evento.categoria }}</p>
+      <p><strong>Precio:</strong> {{ evento.precio | currency: 'CLP' }}</p>
+  
+      <button (click)="volver()">Volver</button>
+    </div>
+  </div>
+  

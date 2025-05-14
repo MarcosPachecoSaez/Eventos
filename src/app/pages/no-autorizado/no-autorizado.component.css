@@ -1,0 +1,16 @@
+.no-autorizado {
+    text-align: center;
+    margin-top: 80px;
+    font-family: sans-serif;
+  }
+  .no-autorizado h1 {
+    font-size: 2rem;
+    color: crimson;
+  }
+  .no-autorizado a {
+    display: inline-block;
+    margin-top: 1rem;
+    text-decoration: underline;
+    color: #007bff;
+  }
+  
