@@ -57,8 +57,18 @@ export class LoginComponent {
         return;
       }
 
-      // ✅ Redirigir al home con parámetro
-      this.router.navigate(['/'], { queryParams: { bienvenido: 'true' } });
+      // ✅ Redirigir según el rol
+      switch (rol) {
+        case 'admin':
+          this.router.navigate(['/dashboard']);
+          break;
+        case 'cliente':
+          this.router.navigate(['/eventos']);
+          break;
+        default:
+          this.router.navigate(['/']);
+          break;
+      }
 
     } catch (error: any) {
       console.error('Error en login:', error);
@@ -100,4 +110,5 @@ export class LoginComponent {
     this.router.navigate(['/recuperar']);
   }
 }
+
 export default LoginComponent;

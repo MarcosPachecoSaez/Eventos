@@ -1,19 +1,17 @@
-import { inject } from '@angular/core';
 import { CanActivateFn } from '@angular/router';
-import { SupabaseService } from '../services/supabase/supabase.service';
+import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { SupabaseService } from '../services/supabase/supabase.service';
 
 export const authGuard: CanActivateFn = async () => {
   const supabaseService = inject(SupabaseService);
   const router = inject(Router);
 
-  const usuario = await supabaseService.getUser();
-  if (usuario) {
-    console.log('✅ Usuario autenticado');
-    return true; // Permite acceso
-  } else {
-    console.log('❌ Usuario no autenticado, redirigiendo a login');
+  const session = await supabaseService.getSession();
+  if (!session) {
     router.navigate(['/login']);
-    return false; // Bloquea acceso
+    return false;
   }
+
+  return true;
 };

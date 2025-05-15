@@ -1,25 +1,28 @@
-import { inject } from '@angular/core';
 import { CanActivateFn } from '@angular/router';
-import { SupabaseService } from '../services/supabase/supabase.service';
+import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { SupabaseService } from '../services/supabase/supabase.service';
 
-export const multiRoleGuard = (rolesPermitidos: string[]): CanActivateFn => {
-  return async () => {
-    const supabase = inject(SupabaseService);
-    const router = inject(Router);
+export const multiRoleGuard: CanActivateFn = async () => {
+  const supabaseService = inject(SupabaseService);
+  const router = inject(Router);
 
-    const user = await supabase.getUser();
-    if (!user) {
-      router.navigate(['/login']);
-      return false;
-    }
+  const session = await supabaseService.getSession();
+  if (!session) {
+    router.navigate(['/login']);
+    return false;
+  }
 
-    const rol = await supabase.getRolUsuario(user.id);
-    if (rol && rolesPermitidos.includes(rol)) {
-      return true;
-    }
+  const { data: usuario, error } = await supabaseService.client
+    .from('usuarios')
+    .select('rol')
+    .eq('id', session.user.id)
+    .single();
 
+  if (error || (usuario?.rol !== 'admin' && usuario?.rol !== 'cliente')) {
     router.navigate(['/no-autorizado']);
     return false;
-  };
+  }
+
+  return true;
 };

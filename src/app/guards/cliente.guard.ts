@@ -1,23 +1,28 @@
-import { inject } from '@angular/core';
 import { CanActivateFn } from '@angular/router';
-import { SupabaseService } from '../services/supabase/supabase.service';
+import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { SupabaseService } from '../services/supabase/supabase.service';
 
 export const clienteGuard: CanActivateFn = async () => {
-  const supabase = inject(SupabaseService);
+  const supabaseService = inject(SupabaseService);
   const router = inject(Router);
 
-  const user = await supabase.getUser();
-  if (!user) {
+  const session = await supabaseService.getSession();
+  if (!session) {
     router.navigate(['/login']);
     return false;
   }
 
-  const rol = await supabase.getRolUsuario(user.id);
-  if (rol === 'cliente') {
-    return true;
+  const { data: usuario, error } = await supabaseService.client
+    .from('usuarios')
+    .select('rol')
+    .eq('id', session.user.id)
+    .single();
+
+  if (error || usuario?.rol !== 'cliente') {
+    router.navigate(['/no-autorizado']);
+    return false;
   }
 
-  router.navigate(['/no-autorizado']);
-  return false;
+  return true;
 };

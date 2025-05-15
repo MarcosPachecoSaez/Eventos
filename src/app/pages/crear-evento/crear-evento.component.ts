@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase/supabase.service';
-import { CommonModule } from '@angular/common';
-import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { NavbarComponent } from 'app/components/navbar/navbar.component';
 
 @Component({
   selector: 'app-crear-evento',
@@ -13,52 +13,62 @@ import { NavbarComponent } from '../../components/navbar/navbar.component';
   styleUrls: ['./crear-evento.component.css']
 })
 export class CrearEventoComponent implements OnInit {
+  formulario!: FormGroup;
   creando = false;
   mensaje = '';
-  formulario!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    private supabase: SupabaseService,
+    private supabaseService: SupabaseService,
     private router: Router
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.formulario = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
       fecha: ['', Validators.required],
       lugar: ['', Validators.required],
       categoria: ['', Validators.required],
-      precio: ['', [Validators.required, Validators.min(0)]],
-      imagen_url: ['']
+      precio: [0, [Validators.required, Validators.min(0)]],
+      imagen_url: ['', Validators.required]
     });
   }
 
   async crearEvento() {
-    if (this.formulario.invalid) return;
+    if (this.formulario.invalid) {
+      this.mensaje = '❌ Todos los campos son obligatorios.';
+      return;
+    }
 
     this.creando = true;
-    const user = await this.supabase.getUser();
-
-    const nuevoEvento = {
-      ...this.formulario.value,
-      creado_por: user?.id ?? null
-    };
+    this.mensaje = '';
 
     try {
-      const { error } = await this.supabase.client
+      const session = await this.supabaseService.getSession();
+      if (!session) {
+        this.mensaje = '❌ Debes iniciar sesión.';
+        this.creando = false;
+        return;
+      }
+
+      const userId = session.user.id;
+
+      const { error } = await this.supabaseService.client
         .from('eventos')
-        .insert([nuevoEvento]);
+        .insert({
+          ...this.formulario.value,
+        });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
-      this.mensaje = '✅ Evento creado correctamente';
-      this.formulario.reset();
+      this.mensaje = '✅ Evento creado exitosamente';
       this.router.navigate(['/dashboard']);
-    } catch (err) {
-      this.mensaje = '❌ Error al crear el evento';
-      console.error(err);
+    } catch (error) {
+      console.error('Error al crear evento:', error);
+      this.mensaje = '❌ Error al crear el evento.';
     } finally {
       this.creando = false;
     }
