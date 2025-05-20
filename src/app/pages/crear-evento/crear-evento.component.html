@@ -39,6 +39,12 @@
       <input formControlName="imagen_url" />
     </label>
 
+    <label>
+      Aforo disponible:
+     <input type="number" formControlName="aforo" />
+    </label>
+
+
     <button type="submit" [disabled]="creando">
       {{ creando ? 'Creando...' : 'Crear Evento' }}
     </button>

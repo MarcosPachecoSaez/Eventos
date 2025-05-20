@@ -6,6 +6,11 @@
     <p class="subtitulo">Explora y administra los eventos desde tu panel personal</p>
   </section>
 
+  <!-- ✅ Alerta de mensaje -->
+  <div *ngIf="mensaje" class="alerta-dashboard">
+    {{ mensaje }}
+  </div>
+
   <section class="acciones">
     <button *ngIf="esAdmin()" (click)="irACrearEvento()">➕ Crear Evento</button>
     <button (click)="irABuscarEventos()">🔍 Buscar Eventos</button>

@@ -1,0 +1,28 @@
+<app-navbar></app-navbar>
+
+<main class="mis-entradas">
+  <h2>Mis Entradas</h2>
+
+  <div *ngIf="mostrarExito" class="alerta-exito">
+    ✅ ¡Compra realizada con éxito!
+  </div>
+
+  <div *ngIf="tickets.length === 0">No tienes entradas compradas aún.</div>
+
+  <div *ngFor="let t of tickets" class="ticket-card">
+    <h3>{{ t.eventos.nombre }} ({{ t.cantidad }} 🎟️)</h3>
+    <p>Comprado el {{ t.created_at | date:'short' }}</p>
+
+    <!-- QR desde API -->
+    <img
+      [src]="'https://api.qrserver.com/v1/create-qr-code?data=' + t.codigo_qr + '&size=128x128'"
+      alt="Código QR"
+    />
+
+    <button (click)="generarPDF(t)">📄 Descargar PDF</button>
+
+    <p class="nombre-evento-final">
+      🎵 Entrada para <strong>{{ t.eventos.nombre }}</strong>
+    </p>
+  </div>
+</main>

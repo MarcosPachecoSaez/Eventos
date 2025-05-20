@@ -1,47 +1,40 @@
-import { SupabaseClient } from '@supabase/supabase-js';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule, Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase/supabase.service';
-import { Router } from '@angular/router';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
 
 @Component({
   selector: 'app-eventos',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule, NavbarComponent],
   templateUrl: './eventos.component.html',
   styleUrls: ['./eventos.component.css']
 })
 export class EventosComponent implements OnInit {
   eventos: any[] = [];
-  cargando: boolean = true;
   eventoSeleccionado: any = null;
   mostrarModal: boolean = false;
+  cargando: boolean = true;
+  rol: 'admin' | 'cliente' | null = null;
 
   constructor(
     private supabaseService: SupabaseService,
     private router: Router
   ) {}
 
-  async ngOnInit(): Promise<void> {
-    await this.obtenerEventos();
-  }
-
-  async obtenerEventos() {
+  async ngOnInit() {
     this.cargando = true;
+
     try {
-      // ✅ Usamos el método público del servicio (getClient o supabaseClient)
-      const { data, error } = await this.supabaseService.client
-        .from('eventos')
-        .select('*')
-        .order('fecha', { ascending: true });
+      const session = await this.supabaseService.getSession();
+      if (session) {
+        this.rol = await this.supabaseService.getRolUsuario(session.user.id);
+      }
 
-      if (error) throw error;
-
-      this.eventos = data || [];
-    } catch (error: any) {
-      console.error('Error al obtener eventos:', error.message);
-      this.eventos = [];
-      alert('Error al cargar eventos');
+      this.eventos = await this.supabaseService.getEventos();
+    } catch (error) {
+      console.error('Error al cargar eventos:', error);
     } finally {
       this.cargando = false;
     }
@@ -62,24 +55,28 @@ export class EventosComponent implements OnInit {
   }
 
   async eliminarEvento(id: string) {
-    if (!confirm('¿Estás seguro de eliminar este evento?')) return;
+    const confirmar = confirm('¿Deseas eliminar este evento?');
+    if (!confirmar) return;
 
-    try {
-      // ✅ Usamos el método público del servicio
-      const { error } = await this.supabaseService.client
-        .from('eventos')
-        .delete()
-        .eq('id', id);
+    const { error } = await this.supabaseService.client
+      .from('eventos')
+      .delete()
+      .eq('id', id);
 
-      if (error) throw error;
-
-      alert('✅ Evento eliminado con éxito');
-      this.obtenerEventos(); // Refrescar la lista
+    if (!error) {
+      this.eventos = this.eventos.filter(e => e.id !== id);
       this.cerrarModal();
-    } catch (error: any) {
-      console.error('Error al eliminar evento:', error.message);
-      alert('Error al eliminar evento');
+      alert('✅ Evento eliminado.');
+    } else {
+      alert('❌ Error al eliminar.');
     }
   }
+
+  esAdmin(): boolean {
+    return this.rol === 'admin';
+  }
+
+  esCliente(): boolean {
+    return this.rol === 'cliente';
+  }
 }
-export default EventosComponent ;

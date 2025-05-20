@@ -32,7 +32,9 @@ export class EditarEventoComponent implements OnInit {
       lugar: ['', Validators.required],
       categoria: ['', Validators.required],
       precio: ['', [Validators.required, Validators.min(0)]],
-      imagen_url: ['']
+      imagen_url: [''],
+      aforo: [0, [Validators.required, Validators.min(1)]] // 👈 nuevo campo
+
     });
 
     this.eventoId = this.route.snapshot.paramMap.get('id') ?? '';

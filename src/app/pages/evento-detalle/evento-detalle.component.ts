@@ -2,18 +2,26 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 import { Location } from '@angular/common';
-import { CommonModule } from '@angular/common'; // 👈 incluye *ngIf, date, currency
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { NavbarComponent } from 'app/components/navbar/navbar.component'; // ✅ Importar el navbar
 
 @Component({
   selector: 'app-evento-detalle',
   standalone: true,
-  imports: [CommonModule], // 👈 habilita *ngIf, |date, |currency, etc.
+  imports: [
+    CommonModule,
+    RouterModule,
+    NavbarComponent // ✅ Agregar aquí
+  ],
   templateUrl: './evento-detalle.component.html',
   styleUrls: ['./evento-detalle.component.css']
 })
 export class EventoDetalleComponent implements OnInit {
   evento: any = null;
   cargando = true;
+  estaAutenticado = false;
+  rol: 'admin' | 'cliente' | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -33,6 +41,14 @@ export class EventoDetalleComponent implements OnInit {
 
     if (!error) this.evento = data;
     this.cargando = false;
+
+    const session = await this.supabase.getSession();
+    this.estaAutenticado = !!session;
+
+    if (session) {
+      const perfil = await this.supabase.getPerfilUsuario(session.user.id);
+      this.rol = perfil?.rol || null;
+    }
   }
 
   volver() {

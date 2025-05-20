@@ -1,22 +1,28 @@
-body {
+:host {
+  display: block;
   background: linear-gradient(to bottom right, #0c0c1c, #1a1a2e);
+  color: #ffffff;
   font-family: 'Segoe UI', sans-serif;
-  color: white;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+app-navbar {
+  display: block;
+  margin-bottom: 2rem;
 }
 
 .home-container {
-  padding: 4rem 2rem;
   text-align: center;
-  background: transparent;
 }
 
-.titulo {
+.hero-section .titulo {
   font-size: 2.5rem;
-  color: #007bff;
+  color: #00bfff;
   margin-bottom: 1rem;
 }
 
-.marca {
+.hero-section .marca {
   background: linear-gradient(to right, #00f2fe, #4facfe);
   background-clip: text;
   -webkit-background-clip: text;
@@ -24,7 +30,7 @@ body {
 }
 
 .subtitulo {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   color: #ccc;
   margin-bottom: 3rem;
 }
@@ -33,13 +39,12 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
+  overflow: hidden;
 }
 
 .carousel-viewport {
-  overflow: hidden;
   width: 100%;
-  max-width: 320px;
+  overflow: hidden;
 }
 
 .carousel-track {
@@ -48,15 +53,26 @@ body {
 }
 
 .evento-card {
-  min-width: 100%;
+  flex: 0 0 100%;
   padding: 1.5rem;
+  margin: 0 0.5rem;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
+  border: 2px solid;
+  border-image: linear-gradient(to right, #00f2fe, #4facfe) 1;
+  border-radius: 16px;
   backdrop-filter: blur(10px);
+  color: white;
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+  text-align: left;
+}
+
+.evento-card h2 {
+  font-size: 1.6rem;
+  color: #00bfff;
 }
 
 .btn-ver-detalles {
+  display: inline-block;
   margin-top: 1rem;
   padding: 0.6rem 1.4rem;
   border-radius: 30px;
@@ -64,6 +80,29 @@ body {
   color: black;
   font-weight: bold;
   text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.btn-ver-detalles:hover {
+  transform: scale(1.05);
+}
+
+.admin-actions {
+  margin-top: 1rem;
+}
+
+.admin-actions button {
+  margin-right: 0.5rem;
+  border: none;
+  border-radius: 50%;
+  background-color: #6c757d;
+  color: white;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+}
+
+.btn-eliminar {
+  background-color: #dc3545;
 }
 
 .carousel-arrow {
@@ -72,24 +111,33 @@ body {
   font-size: 2rem;
   color: #00f2fe;
   cursor: pointer;
-  z-index: 10;
+  user-select: none;
+}
+
+.login-btn-container {
+  margin-top: 3rem;
 }
 
 .login-btn {
   background: #007bff;
   color: white;
   padding: 0.8rem 2rem;
+  border: none;
   border-radius: 30px;
+  font-weight: bold;
   cursor: pointer;
   font-size: 1rem;
 }
 
-@media (max-width: 768px) {
-  .titulo {
-    font-size: 2rem;
-  }
+.login-btn:hover {
+  background: #0056b3;
+}
 
-  .carousel-viewport {
-    max-width: 90%;
+@media (max-width: 768px) {
+  .evento-card {
+    flex: 0 0 90%;
+  }
+  .hero-section .titulo {
+    font-size: 2rem;
   }
 }

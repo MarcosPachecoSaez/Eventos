@@ -31,7 +31,9 @@ export class CrearEventoComponent implements OnInit {
       lugar: ['', Validators.required],
       categoria: ['', Validators.required],
       precio: [0, [Validators.required, Validators.min(0)]],
-      imagen_url: ['', Validators.required]
+      imagen_url: ['', Validators.required],
+      aforo: [100, [Validators.required, Validators.min(1)]] // valor por defecto aquí también
+
     });
   }
 

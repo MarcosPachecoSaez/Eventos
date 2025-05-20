@@ -1,16 +1,15 @@
 // src/app/pages/dashboard/dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
 import { SupabaseService } from '../../services/supabase/supabase.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FormsModule } from '@angular/forms';
 
-
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FormsModule], // 👈 ¡Agrega esto!
+  imports: [CommonModule, NavbarComponent, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -24,7 +23,13 @@ export class DashboardComponent implements OnInit {
   filtroCategoria: string = '';
   filtroFecha: string = '';
 
-  constructor(private supabaseService: SupabaseService, private router: Router) {}
+  mensaje: string = '';
+
+  constructor(
+    private supabaseService: SupabaseService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   async ngOnInit() {
     const user = await this.supabaseService.getUser();
@@ -35,6 +40,19 @@ export class DashboardComponent implements OnInit {
       this.todosLosEventos = await this.supabaseService.getEventos();
       this.eventos = [...this.todosLosEventos];
     }
+
+    this.route.queryParams.subscribe(params => {
+      if (params['creado'] === 'true') {
+        this.mensaje = '✅ Evento creado correctamente';
+      } else if (params['editado'] === 'true') {
+        this.mensaje = '✅ Evento actualizado correctamente';
+      }
+
+      // Ocultar el mensaje automáticamente después de 5 segundos
+      if (this.mensaje) {
+        setTimeout(() => this.mensaje = '', 5000);
+      }
+    });
   }
 
   cerrarSesion() {
@@ -104,4 +122,5 @@ export class DashboardComponent implements OnInit {
     this.eventos = [...this.todosLosEventos];
   }
 }
+
 export default DashboardComponent;

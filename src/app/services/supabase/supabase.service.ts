@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
+import { v4 as uuidv4 } from 'uuid';  // npm i uuid
 
 @Injectable({
   providedIn: 'root'
@@ -135,5 +136,92 @@ export class SupabaseService {
   // ========================
   getClient(): SupabaseClient {
     return this.supabase;
+  }
+ // …
+
+  /** Compra entradas para un evento y devuelve el código QR */
+  async comprarEntradas(eventoId: string, cantidad: number): Promise<string | null> {
+  const session = await this.getSession();
+  if (!session) return null;
+
+  const usuario_id = session.user.id;
+
+  // 1. Obtener evento
+  const { data: evento, error: errorEvento } = await this.client
+    .from('eventos')
+    .select('aforo')
+    .eq('id', eventoId)
+    .single();
+
+  if (errorEvento || !evento) {
+    console.error('❌ Error al obtener evento:', errorEvento);
+    return null;
+  }
+
+  // 2. Obtener cantidad ya vendida
+  const { data: ticketsVendidos, error: errorTickets } = await this.client
+    .from('tickets')
+    .select('cantidad')
+    .eq('evento_id', eventoId);
+
+  const totalVendidas = ticketsVendidos?.reduce((acc, t) => acc + t.cantidad, 0) || 0;
+  const disponibles = evento.aforo - totalVendidas;
+
+  if (cantidad > disponibles) {
+    alert(`❌ Solo quedan ${disponibles} entradas disponibles.`);
+    return null;
+  }
+
+  // 3. Insertar ticket si hay stock
+  const codigo_qr = uuidv4();
+  const { error } = await this.client.from('tickets').insert({
+    evento_id: eventoId,
+    usuario_id,
+    cantidad,
+    codigo_qr
+  });
+
+  if (error) {
+    console.error('Error al crear ticket:', error);
+    return null;
+  }
+
+  return codigo_qr;
+}
+
+
+  /** Devuelve la lista de tickets del usuario autenticado */
+  async getMisTickets(): Promise<any[]> {
+    const session = await this.getSession();
+    if (!session) return [];
+    const usuario_id = session.user.id;
+
+    const { data } = await this.client
+      .from('tickets')
+      .select(`
+        id,
+        cantidad,
+        codigo_qr,
+        created_at,
+        eventos (
+          id,
+          nombre,
+          fecha,
+          precio
+        )
+      `)
+      .eq('usuario_id', usuario_id);
+
+    return data || [];
+  }
+
+  /** Devuelve un evento por su id */
+  async getEventoById(id: string): Promise<any> {
+    const { data } = await this.client
+      .from('eventos')
+      .select('*')
+      .eq('id', id)
+      .single();
+    return data;
   }
 }

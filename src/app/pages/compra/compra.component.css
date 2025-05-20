@@ -1,0 +1,65 @@
+.compra-container {
+  padding: 2rem;
+  background: linear-gradient(to bottom right, #0c0c1c, #1a1a2e);
+  color: white;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.evento-nombre {
+  font-size: 2.2rem;
+  color: #00bfff;
+  margin-bottom: 1rem;
+}
+
+.evento-info {
+  font-size: 1.1rem;
+  color: #ccc;
+  margin: 0.5rem 0;
+}
+
+.compra-form {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.compra-form input {
+  padding: 0.5rem;
+  width: 150px;
+  border-radius: 6px;
+  border: none;
+}
+
+.compra-form button {
+  background-color: #00bfff;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 30px;
+  font-weight: bold;
+  color: black;
+  cursor: pointer;
+}
+
+.compra-form button:hover {
+  background-color: #0099cc;
+}
+
+.mensaje {
+  margin-top: 1rem;
+  color: #4caf50;
+}
+
+.qr-section {
+  margin-top: 2rem;
+}
+
+.qr-img {
+  margin-top: 1rem;
+  border-radius: 12px;
+  background-color: white;
+  padding: 0.5rem;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+}
