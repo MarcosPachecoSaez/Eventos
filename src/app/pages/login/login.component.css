@@ -6,9 +6,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
-    linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-    url('../../../../public/Background/login-bg.jpg') center/cover;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../../../public/Background/login-bg.jpg") center/cover;
 }
 
 .form-login {
@@ -17,7 +16,7 @@
   max-width: 400px;
   margin: 2rem auto;
   padding: 2rem;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(8px);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
@@ -32,7 +31,7 @@ label {
   font-size: 1rem;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
-  
+
 input {
   padding: 12px 15px;
   margin-bottom: 1.5rem;
@@ -69,12 +68,12 @@ input:focus {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(255, 82, 82, 0.4);
 }
-  
+
 .recuperar-container {
   margin-top: 15px;
   text-align: center;
 }
-  
+
 .btn-recuperar {
   background: none;
   border: none;
@@ -135,7 +134,12 @@ input:focus {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-  

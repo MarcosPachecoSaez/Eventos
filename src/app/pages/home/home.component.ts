@@ -55,6 +55,7 @@ export class HomeComponent implements OnInit {
       }
 
       this.eventos = await this.supabaseService.getEventos();
+      console.log('🎯 Eventos cargados en Home:', this.eventos);
       this.iniciarCarrusel();
     } catch (error) {
       console.error('❌ Error al cargar el home:', error);
