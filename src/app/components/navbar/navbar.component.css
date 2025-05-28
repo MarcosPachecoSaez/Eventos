@@ -1,9 +1,10 @@
 .navbar {
+  font-family: "Segoe UI", sans-serif;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background: linear-gradient(90deg, #312937, #1e1b26);
+  background: linear-gradient(90deg, #6a0572, #ab1f8a);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   position: sticky;
   top: 0;
@@ -13,7 +14,7 @@
 .logo {
   font-size: 2rem;
   font-weight: bold;
-  color: #f8b348;
+  color: #ffffff;
   cursor: pointer;
   transition: all 0.3s ease;
   text-shadow: 0 0 5px #f8b348;

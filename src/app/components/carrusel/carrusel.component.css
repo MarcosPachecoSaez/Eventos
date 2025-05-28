@@ -84,6 +84,7 @@
   text-align: center;
   z-index: 1;
   opacity: 1;
+  padding-top: 12px;
 }
 
 .evento-centro:hover {

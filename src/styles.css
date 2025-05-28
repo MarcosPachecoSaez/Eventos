@@ -15,7 +15,7 @@ html,
 body {
   width: 100%;
   height: 100%;
-  font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Bebas Neue", sans-serif;
   background-color: var(
     --color-dark
   ); /* Puedes cambiar a #f9f9f9 si prefieres fondo claro */
