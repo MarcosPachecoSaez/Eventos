@@ -9,7 +9,7 @@ import { SupabaseService } from '../../services/supabase/supabase.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
   estaAutenticado: boolean = false;
@@ -28,7 +28,7 @@ export class NavbarComponent implements OnInit {
       const userId = session.user.id;
 
       const { data: usuario, error } = await this.supabaseService.client
-        .from('usuarios') // Asegúrate que la tabla sea "usuarios"
+        .from('usuarios')
         .select('nombre')
         .eq('id', userId)
         .single();
@@ -43,10 +43,10 @@ export class NavbarComponent implements OnInit {
     await this.supabaseService.client.auth.signOut();
     this.estaAutenticado = false;
     this.nombreUsuario = '';
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
   }
 
   irAInicio(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
   }
 }

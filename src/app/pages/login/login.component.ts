@@ -85,6 +85,6 @@ export class LoginComponent {
   }
 
   irARecuperar() {
-    this.router.navigate(['/recuperar']);
+    this.router.navigate(['/registro']);
   }
 }
