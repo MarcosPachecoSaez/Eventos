@@ -38,6 +38,11 @@ export class NavbarComponent implements OnInit {
       }
     }
   }
+  menuAbierto = false;
+
+  toggleMenu() {
+    this.menuAbierto = !this.menuAbierto;
+  }
 
   async cerrarSesion() {
     await this.supabaseService.client.auth.signOut();

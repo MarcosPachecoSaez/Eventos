@@ -20,7 +20,9 @@ export const routes: Routes = [
   {
     path: 'registro',
     loadComponent: () =>
-      import('./pages/registro/registro.component').then((m) => m.default),
+      import('./pages/registro/registro.component').then(
+        (m) => m.RegistroComponent
+      ),
   },
   {
     path: 'home',
