@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,7 +15,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './carrusel.component.html',
   styleUrls: ['./carrusel.component.css'],
 })
-export class CarruselComponent implements OnInit, OnDestroy {
+export class CarruselComponent implements OnInit, OnDestroy, OnChanges {
   @Input() eventos: any[] = [];
   @Input() cargando: boolean = false;
 
@@ -17,6 +24,12 @@ export class CarruselComponent implements OnInit, OnDestroy {
   centro = 0;
   intervaloCarrusel: any;
   pausado = false;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['eventos'] && this.eventos.length > 0) {
+      this.iniciarRotacion();
+    }
+  }
 
   ngOnInit(): void {
     if (this.eventos.length > 0) this.iniciarRotacion();

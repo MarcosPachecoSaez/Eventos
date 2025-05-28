@@ -11,7 +11,7 @@
     <p class="subtitulo">Vive la experiencia de los mejores eventos del país</p>
   </div>
 
-  <app-carrusel [eventos]="eventos" [cargando]="false"></app-carrusel>
+  <app-carrusel [eventos]="eventos" [cargando]="cargando"></app-carrusel>
 
   <div *ngIf="!estaAutenticado" class="login-btn-container">
     <button class="login-btn" (click)="irALogin()">Iniciar sesión</button>

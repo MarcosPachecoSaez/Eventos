@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
   usuario: any = {};
   estaAutenticado: boolean = false;
   rol: 'admin' | 'cliente' | null = null;
-
+  cargando: boolean = true;
   intervalId: any;
   currentSlide: number = 0;
 
@@ -37,8 +37,6 @@ export class HomeComponent implements OnInit {
 
       if (session) {
         const userId = session.user.id;
-
-        // 👇 AHORA USANDO TABLA "usuarios"
         const { data: usuario, error } = await this.supabaseService.client
           .from('usuarios')
           .select('nombre, rol')
@@ -47,18 +45,17 @@ export class HomeComponent implements OnInit {
 
         if (error) {
           console.error('Error al obtener usuario:', error);
-          return;
+        } else {
+          this.usuario = usuario;
+          this.rol = usuario.rol;
         }
-
-        this.usuario = usuario;
-        this.rol = usuario.rol;
       }
 
       this.eventos = await this.supabaseService.getEventos();
-      console.log('🎯 Eventos cargados en Home:', this.eventos);
-      this.iniciarCarrusel();
     } catch (error) {
       console.error('❌ Error al cargar el home:', error);
+    } finally {
+      this.cargando = false;
     }
   }
 
