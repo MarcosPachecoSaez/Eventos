@@ -1,14 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 import { NavbarComponent } from 'app/components/navbar/navbar.component';
 import { CarruselComponent } from 'app/components/carrusel/carrusel.component';
+import { FooterComponent } from 'app/components/footer/footer.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, NavbarComponent, CarruselComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    NavbarComponent,
+    CarruselComponent,
+    FooterComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
