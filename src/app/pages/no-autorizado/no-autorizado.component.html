@@ -1,6 +1,15 @@
 <div class="no-autorizado">
+  <div class="card">
     <h1>🚫 Acceso denegado</h1>
-    <p>No tienes permisos para acceder a esta sección.</p>
-    <a routerLink="/dashboard">Volver al inicio</a>
+    <p>No se pudo verificar tu identidad por una de las siguientes razones:</p>
+    <ul>
+      <li>Tu usuario ya no existe en nuestra base de datos.</li>
+      <li>Hubo un error de conexión con el servidor.</li>
+    </ul>
+    <p>
+      Por favor, contacta con el
+      <a href="mailto:soporte@eVentos.com">soporte técnico</a> para más ayuda.
+    </p>
+    <a routerLink="/login">Volver al login</a>
   </div>
-  
+</div>

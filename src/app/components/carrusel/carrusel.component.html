@@ -1,0 +1,62 @@
+<div *ngIf="cargando" class="cargando">Cargando eventos...</div>
+
+<div *ngIf="!cargando && eventos.length === 0" class="no-eventos">
+  No hay eventos disponibles en este momento.
+</div>
+
+<div *ngIf="!cargando && eventos.length > 0" class="carrusel-container">
+  <div
+    class="carrusel-3d"
+    (mouseenter)="pausado = true"
+    (mouseleave)="pausado = false"
+  >
+    <div
+      *ngFor="let evento of eventos; let i = index"
+      class="card-evento-3d"
+      [ngClass]="obtenerClase(i)"
+      (click)="manejarClick(i)"
+    >
+      <img [src]="evento.imagen_url" alt="{{ evento.nombre }}" />
+      <div class="contenido">
+        <h3>{{ evento.nombre }}</h3>
+        <p>{{ evento.lugar }} - {{ evento.fecha | date : "longDate" }}</p>
+      </div>
+      <div class="fondo-centro">
+        <img src="../../../assets/images/concert.jpg" alt="Imagen central" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" *ngIf="mostrarModal">
+    <div class="modal-contenido">
+      <span class="cerrar" (click)="cerrarModal()">&times;</span>
+      <h2>{{ eventoSeleccionado?.nombre }}</h2>
+      <img
+        [src]="eventoSeleccionado?.imagen_url"
+        alt="{{ eventoSeleccionado?.nombre }}"
+        class="imagen-modal"
+      />
+      <p><strong>Descripción:</strong> {{ eventoSeleccionado?.descripcion }}</p>
+      <p>
+        <strong>Fecha:</strong>
+        {{ eventoSeleccionado?.fecha | date : "fullDate" }}
+      </p>
+      <p><strong>Lugar:</strong> {{ eventoSeleccionado?.lugar }}</p>
+      <p><strong>Categoría:</strong> {{ eventoSeleccionado?.categoria }}</p>
+      <p><strong>Precio:</strong> ${{ eventoSeleccionado?.precio }}</p>
+
+      <div class="botones-modal">
+        <button (click)="editarEvento(eventoSeleccionado)" class="btn-editar">
+          Editar
+        </button>
+        <button
+          (click)="eliminarEvento(eventoSeleccionado.id)"
+          class="btn-eliminar"
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
