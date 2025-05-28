@@ -2,8 +2,7 @@
   display: block;
   background: linear-gradient(to bottom right, #0c0c1c, #1a1a2e);
   color: #ffffff;
-  font-family: 'Segoe UI', sans-serif;
-  padding: 2rem;
+  font-family: "Segoe UI", sans-serif;
   min-height: 100vh;
 }
 

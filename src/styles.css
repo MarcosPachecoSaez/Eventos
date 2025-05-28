@@ -1,115 +1,146 @@
-/* You can add global styles to this file, and also import other style files */
+/* ====== VARIABLES ROOT ====== */
+:root {
+  --color-primary: #ff6b6b;
+  --color-dark: #1a1a1a;
+}
+
 /* ====== RESET GENERAL ====== */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  html, body {
-    height: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f9f9f9;
-    color: #1e1e1e;
-  }
-  
-  /* ====== TIPOGRAFÍA GLOBAL ====== */
-  h1, h2, h3, h4, h5, h6 {
-    color: #1e1e1e;
-  }
-  
-  a {
-    color: #007aff;
-    text-decoration: none;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
-  
-  /* ====== BOTONES GLOBALES ====== */
-  button {
-    font-family: inherit;
-    cursor: pointer;
-    border: none;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-  
-  /* ====== CONTAINERS Y ESPACIADO ====== */
-  .container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 1rem;
-  }
-  
-  .section {
-    padding: 3rem 1rem;
-  }
-  
-  /* ====== NAVBAR GENÉRICO (opcional) ====== */
-  .navbar {
-    background-color: #ffffff;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-  
-  .navbar a {
-    margin: 0 1rem;
-    font-weight: 500;
-  }
-  
-  /* ====== INPUTS ====== */
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="number"],
-  input[type="date"] {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    width: 100%;
-    margin-bottom: 1rem;
-  }
-  
-  input:focus {
-    outline: none;
-    border-color: #007aff;
-    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
-  }
-  
-  /* ====== MENSAJES ====== */
-  .alert {
-    padding: 1rem;
-    border-radius: 6px;
-    margin: 1rem 0;
-    font-size: 0.95rem;
-  }
-  
-  .alert-success {
-    background-color: #d4edda;
-    color: #155724;
-  }
-  
-  .alert-error {
-    background-color: #f8d7da;
-    color: #721c24;
-  }
-  
-  /* ====== FOOTER (si lo agregas luego) ====== */
-  footer {
-    background-color: #222;
-    color: #ccc;
-    text-align: center;
-    padding: 1rem;
-    margin-top: 3rem;
-    font-size: 0.9rem;
-  }
-  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(
+    --color-dark
+  ); /* Puedes cambiar a #f9f9f9 si prefieres fondo claro */
+  color: #1e1e1e;
+}
+
+/* ====== TIPOGRAFÍA GLOBAL ====== */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #1e1e1e;
+}
+
+a {
+  color: #007aff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ====== BOTONES GLOBALES ====== */
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ====== INPUTS ====== */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"] {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+input:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
+}
+
+/* ====== MENSAJES ====== */
+.alert {
+  padding: 1rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* ====== CONTAINERS Y SECCIONES ====== */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem;
+}
+
+.section {
+  padding: 3rem 1rem;
+}
+
+/* ====== NAVBAR ====== */
+.navbar {
+  background-color: #ffffff;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.navbar a {
+  margin: 0 1rem;
+  font-weight: 500;
+}
+
+/* ====== FOOTER ====== */
+footer {
+  background-color: #222;
+  color: #ccc;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 3rem;
+  font-size: 0.9rem;
+}
+
+/* ====== ROOT APP CONTAINER ====== */
+app-root {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ====== ANCHO COMPLETO PARA CONTENIDO POST router-outlet ====== */
+router-outlet + * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

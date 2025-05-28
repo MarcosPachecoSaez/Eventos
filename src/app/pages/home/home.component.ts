@@ -3,17 +3,12 @@ import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 import { NavbarComponent } from 'app/components/navbar/navbar.component';
+import { CarruselComponent } from 'app/components/carrusel/carrusel.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    NavbarComponent,
-    DatePipe,
-    CurrencyPipe
-  ],
+  imports: [CommonModule, RouterModule, NavbarComponent, CarruselComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
@@ -45,7 +40,7 @@ export class HomeComponent implements OnInit {
 
         // 👇 AHORA USANDO TABLA "usuarios"
         const { data: usuario, error } = await this.supabaseService.client
-          .from('usuarios') 
+          .from('usuarios')
           .select('nombre, rol')
           .eq('id', userId)
           .single();
@@ -90,7 +85,7 @@ export class HomeComponent implements OnInit {
 
       if (error) throw error;
 
-      this.eventos = this.eventos.filter(e => e.id !== id);
+      this.eventos = this.eventos.filter((e) => e.id !== id);
       alert('✅ Evento eliminado.');
     } catch (error) {
       console.error('❌ Error al eliminar evento:', error);

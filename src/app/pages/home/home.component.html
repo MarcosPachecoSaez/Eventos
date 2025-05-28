@@ -11,30 +11,7 @@
     <p class="subtitulo">Vive la experiencia de los mejores eventos del país</p>
   </div>
 
-  <div class="carousel-wrapper" (mouseenter)="pausarCarrusel()" (mouseleave)="reanudarCarrusel()">
-    <button class="carousel-arrow left" (click)="anteriorSlide()">&#10094;</button>
-    <div class="carousel-viewport">
-      <div class="carousel-track" [style.transform]="transform">
-        <div class="evento-card" *ngFor="let evento of eventos">
-          <h2>{{ evento.nombre }}</h2>
-          <ng-container *ngIf="estaAutenticado; else loginMsg">
-            <p>📅 {{ evento.fecha | date: 'fullDate' }}</p>
-            <p>📍 {{ evento.lugar }}</p>
-            <p>💲 {{ evento.precio | currency: 'CLP' }}</p>
-            <a class="btn-ver-detalles" [routerLink]="['/evento', evento.id]">Ver detalles</a>
-            <div *ngIf="esAdmin()" class="admin-actions">
-              <button (click)="irAEditar(evento.id)">✏️</button>
-              <button class="btn-eliminar" (click)="eliminarEvento(evento.id)">🗑️</button>
-            </div>
-          </ng-container>
-          <ng-template #loginMsg>
-            <p class="info-msg">🔒 Inicia sesión para ver más detalles</p>
-          </ng-template>
-        </div>
-      </div>
-    </div>
-    <button class="carousel-arrow right" (click)="siguienteSlide()">&#10095;</button>
-  </div>
+  <app-carrusel [eventos]="eventos" [cargando]="false"></app-carrusel>
 
   <div *ngIf="!estaAutenticado" class="login-btn-container">
     <button class="login-btn" (click)="irALogin()">Iniciar sesión</button>
