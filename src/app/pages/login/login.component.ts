@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { SupabaseService } from '../../services/supabase/supabase.service';
-import { Router } from '@angular/router';
+import { RouterModule,Router } from '@angular/router';
 import { NavbarComponent } from 'app/components/navbar/navbar.component';
 
 @Component({
@@ -10,13 +10,14 @@ import { NavbarComponent } from 'app/components/navbar/navbar.component';
   standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [CommonModule, FormsModule, NavbarComponent]
+  imports: [CommonModule, FormsModule, RouterModule, NavbarComponent]
 })
 export class LoginComponent {
   email: string = '';
   password: string = '';
   mensaje: string = '';
   isLoading: boolean = false;
+  correoNoConfirmado = false;
 
   constructor(
     private supabaseService: SupabaseService,
@@ -31,12 +32,28 @@ export class LoginComponent {
 
     this.isLoading = true;
     this.mensaje = '';
+    this.correoNoConfirmado = false;
 
     try {
       const loginResult = await this.supabaseService.loginUsuario(this.email, this.password);
-
       if (!loginResult) {
         this.mensaje = '❌ Email o contraseña incorrectos';
+        this.isLoading = false;
+        return;
+      }
+
+      const { data: userData, error: userError } = await this.supabaseService.getClient().auth.getUser();
+      if (userError || !userData?.user) {
+        this.mensaje = '❌ Error al obtener usuario';
+        this.isLoading = false;
+        return;
+      }
+
+      const user = userData.user;
+
+      if (!user.email_confirmed_at) {
+        this.mensaje = '❌ Debes confirmar tu correo antes de iniciar sesión.';
+        this.correoNoConfirmado = true;
         this.isLoading = false;
         return;
       }
@@ -49,15 +66,32 @@ export class LoginComponent {
       }
 
       const userId = session.user.id;
-      const rol = await this.supabaseService.getRolUsuario(userId);
 
+      const perfil = await this.supabaseService.getPerfilUsuario(userId);
+      if (!perfil) {
+        const nuevoPerfil = {
+          id: user.id,
+          nombre: user.user_metadata?.['full_name'] || 'Sin nombre',
+          correo: user.email!,
+          rol: 'cliente',
+          edad: 18
+        };
+
+        try {
+          await this.supabaseService.insertarPerfilUsuario(nuevoPerfil);
+          console.log('✅ Perfil creado automáticamente en tabla usuarios.');
+        } catch (insertError) {
+          console.warn('⚠️ Error al insertar perfil:', insertError);
+        }
+      }
+
+      const rol = await this.supabaseService.getRolUsuario(userId);
       if (!rol) {
         this.mensaje = '❌ No se pudo obtener el rol del usuario';
         this.isLoading = false;
         return;
       }
 
-      // ✅ Redirigir según el rol
       switch (rol) {
         case 'admin':
           this.router.navigate(['/dashboard']);
@@ -83,7 +117,8 @@ export class LoginComponent {
       return '❌ Credenciales incorrectas';
     }
     if (error.message.includes('Email not confirmed')) {
-      return '❌ Confirma tu email primero. ¿Necesitas que reenviemos el correo?';
+      this.correoNoConfirmado = true;
+      return '❌ Confirma tu email primero.';
     }
     return '❌ Error al iniciar sesión. Intenta nuevamente.';
   }
@@ -98,16 +133,13 @@ export class LoginComponent {
     try {
       await this.supabaseService.reenviarCorreoConfirmacion(this.email);
       this.mensaje = '📨 Correo de confirmación reenviado. Revisa tu bandeja de entrada.';
+      this.correoNoConfirmado = false;
     } catch (error) {
       console.error('Error al reenviar correo:', error);
       this.mensaje = '❌ Error al reenviar el correo. Verifica tu email.';
     } finally {
       this.isLoading = false;
     }
-  }
-
-  irARecuperar() {
-    this.router.navigate(['/recuperar']);
   }
 }
 

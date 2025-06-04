@@ -6,7 +6,13 @@
     <a *ngIf="!estaAutenticado" routerLink="/registro" routerLinkActive="active">Registro</a>
     <a *ngIf="!estaAutenticado" routerLink="/login" routerLinkActive="active">Iniciar sesión</a>
 
-    <span *ngIf="estaAutenticado" class="nombre-usuario">Hola, {{ nombreUsuario }} 👋</span>
-    <button *ngIf="estaAutenticado" (click)="cerrarSesion()" class="logout-btn">Cerrar sesión</button>
+    <div *ngIf="estaAutenticado" class="dropdown">
+      <button class="dropbtn">👤 {{ nombreUsuario }}</button>
+      <div class="dropdown-content">
+        <a routerLink="/mis-entradas">🎫 Mis entradas</a>
+        <a routerLink="/perfil">👤 Perfil</a>
+        <a (click)="cerrarSesion()">🚪 Cerrar sesión</a>
+      </div>
+    </div>
   </nav>
 </header>

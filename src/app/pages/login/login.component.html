@@ -1,32 +1,30 @@
 <app-navbar></app-navbar>
 
-<h2>Iniciar Sesión</h2>
+<div class="login-container">
+  <h2>Iniciar sesión</h2>
 
-<form #form="ngForm" (ngSubmit)="login(form)" class="form-login">
-    <label for="email">Correo:</label>
-    <input type="email" id="email" name="email" [(ngModel)]="email" required />
-  
-    <label for="password">Contraseña:</label>
-    <input type="password" id="password" name="password" [(ngModel)]="password" required />
-  
-    <button type="submit" class="btn-login">Iniciar Sesión</button>
-  
-    <!-- Botón para recuperar contraseña DEBAJO -->
-    <div class="recuperar-container">
-      <button type="button" class="btn-recuperar" (click)="irARecuperar()">¿Olvidaste tu contraseña?</button>
+  <form #form="ngForm" (ngSubmit)="login(form)">
+    <div class="campo">
+      <label for="email">Correo electrónico:</label>
+      <input type="email" id="email" name="email" [(ngModel)]="email" required />
     </div>
+
+    <div class="campo">
+      <label for="password">Contraseña:</label>
+      <input type="password" id="password" name="password" [(ngModel)]="password" required />
+    </div>
+
+    <button type="submit" [disabled]="form.invalid || isLoading">
+      {{ isLoading ? 'Cargando...' : 'Iniciar sesión' }}
+    </button>
+
+    <div class="mensaje" *ngIf="mensaje">{{ mensaje }}</div>
+
+    <div *ngIf="correoNoConfirmado">
+      <p>¿No recibiste el correo? <a href="#" (click)="reenviarCorreo()">Reenviar confirmación</a></p>
+    </div>
+
+    <!-- ✅ Reemplazado con RouterLink -->
+    <p><a [routerLink]="['/recuperar']">¿Olvidaste tu contraseña?</a></p>
   </form>
-  
-  <!-- Mensajes de error o éxito -->
-  <div *ngIf="mensaje" [ngClass]="{
-      'mensaje-exito': mensaje.includes('✅') || mensaje.includes('📨'),
-      'mensaje-error': mensaje.includes('❌') || mensaje.includes('Error') || mensaje.includes('no está confirmado')
-    }">
-    {{ mensaje }}
-  </div>
-  
-  <!-- Botón reenviar correo si el email no está confirmado -->
-  <div *ngIf="mensaje.includes('no está confirmado')">
-    <button (click)="reenviarCorreo()">Reenviar correo de confirmación</button>
-  </div>
-  
+</div>

@@ -28,7 +28,7 @@ export class NavbarComponent implements OnInit {
       const userId = session.user.id;
 
       const { data: usuario, error } = await this.supabaseService.client
-        .from('usuarios') // Asegúrate que la tabla sea "usuarios"
+        .from('usuarios')
         .select('nombre')
         .eq('id', userId)
         .single();

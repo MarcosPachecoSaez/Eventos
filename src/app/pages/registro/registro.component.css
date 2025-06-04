@@ -48,3 +48,11 @@ form {
     margin-bottom: 20px;
   }
   
+  input.ng-invalid.ng-touched {
+  border: 1px solid red;
+}
+
+button:disabled {
+  background-color: #c0d9ff;
+  cursor: not-allowed;
+}

@@ -16,47 +16,60 @@ export class RegistroComponent {
     nombre: '',
     email: '',
     contrasena: '',
-    edad: '',
-    rol: 'cliente' // 👈 valor fijo por ahora
+    edad: null,
+    rol: 'cliente'
   };
+
+  correoExistente = false;
+  registroExitoso = false;
+  campoActivo: string | null = null;
 
   constructor(private supabaseService: SupabaseService, private router: Router) {}
 
+  setCampoActivo(nombre: string) {
+    this.campoActivo = nombre;
+  }
+
+  limpiarCampoActivo() {
+    this.campoActivo = null;
+  }
+
+  contrasenaValida(password: string): boolean {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
+  }
+
   async registrar(form: NgForm) {
-    if (form.invalid) {
-      alert('Por favor completa todos los campos correctamente');
+    console.clear();
+    if (form.invalid) return;
+
+    if (!this.contrasenaValida(this.usuario.contrasena)) {
+      alert('❌ La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.');
+      return;
+    }
+
+    // Verifica correo duplicado en la tabla "usuarios"
+    const { existe } = await this.supabaseService.verificarCorreoExistente(this.usuario.email);
+    if (existe) {
+      this.correoExistente = true;
       return;
     }
 
     try {
       const { data, error } = await this.supabaseService.registrarUsuario(
         this.usuario.email,
-        this.usuario.contrasena
+        this.usuario.contrasena,
+        this.usuario.nombre
       );
-      
-      if (error || !data.user) {
-        throw new Error(error?.message || 'Error al registrar usuario');
-      }
-      
-      
-      const usuarioConvertido = {
-        id: data.user.id,
-        nombre: this.usuario.nombre,
-        correo: this.usuario.email,
-        rol: 'cliente',
-        edad: Number(this.usuario.edad) // 👈 solo si la tabla lo permite
-      };
-      
-      
 
-      await this.supabaseService.insertarPerfilUsuario(usuarioConvertido);
-      console.log('✅ Usuario registrado con éxito');
+      if (error || !data.user) throw new Error(error?.message || 'Error al registrar');
 
-      this.router.navigate(['/login']);
-    } catch (error: any) {
-      console.error('❌ Error al registrar usuario:', error.message || error);
-      alert('Error al registrar usuario. Revisa los datos e intenta nuevamente.');
+      this.registroExitoso = true;
+      console.log('✅ Usuario registrado. Esperando confirmación.');
+    } catch (error) {
+      console.error('❌ Error al registrar:', error);
+      alert('Error al registrar usuario.');
     }
   }
 }
+
 export default RegistroComponent;
