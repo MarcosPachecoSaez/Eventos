@@ -7,8 +7,8 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './no-autorizado.component.html',
-  styleUrls: ['./no-autorizado.component.css']
+  styleUrls: ['./no-autorizado.component.css'],
 })
 export class NoAutorizadoComponent {}
 
-export default NoAutorizadoComponent; // 👈 ¡ESTO ES CRÍTICO!
+export default NoAutorizadoComponent;

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 import { NavbarComponent } from 'app/components/navbar/navbar.component';
+import { CarruselComponent } from 'app/components/carrusel/carrusel.component';
+import { FooterComponent } from 'app/components/footer/footer.component';
 
 @Component({
   selector: 'app-home',
@@ -11,8 +13,8 @@ import { NavbarComponent } from 'app/components/navbar/navbar.component';
     CommonModule,
     RouterModule,
     NavbarComponent,
-    DatePipe,
-    CurrencyPipe
+    CarruselComponent,
+    FooterComponent,
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
@@ -22,7 +24,7 @@ export class HomeComponent implements OnInit {
   usuario: any = {};
   estaAutenticado: boolean = false;
   rol: 'admin' | 'cliente' | null = null;
-
+  cargando: boolean = true;
   intervalId: any;
   currentSlide: number = 0;
 
@@ -42,27 +44,25 @@ export class HomeComponent implements OnInit {
 
       if (session) {
         const userId = session.user.id;
-
-        // 👇 AHORA USANDO TABLA "usuarios"
         const { data: usuario, error } = await this.supabaseService.client
-          .from('usuarios') 
+          .from('usuarios')
           .select('nombre, rol')
           .eq('id', userId)
           .single();
 
         if (error) {
           console.error('Error al obtener usuario:', error);
-          return;
+        } else {
+          this.usuario = usuario;
+          this.rol = usuario.rol;
         }
-
-        this.usuario = usuario;
-        this.rol = usuario.rol;
       }
 
       this.eventos = await this.supabaseService.getEventos();
-      this.iniciarCarrusel();
     } catch (error) {
       console.error('❌ Error al cargar el home:', error);
+    } finally {
+      this.cargando = false;
     }
   }
 
@@ -90,7 +90,7 @@ export class HomeComponent implements OnInit {
 
       if (error) throw error;
 
-      this.eventos = this.eventos.filter(e => e.id !== id);
+      this.eventos = this.eventos.filter((e) => e.id !== id);
       alert('✅ Evento eliminado.');
     } catch (error) {
       console.error('❌ Error al eliminar evento:', error);
