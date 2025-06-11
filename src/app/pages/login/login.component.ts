@@ -2,15 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '../../services/supabase/supabase.service';
-import { RouterModule,Router } from '@angular/router';
-import { NavbarComponent } from 'app/components/navbar/navbar.component';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [CommonModule, FormsModule, RouterModule, NavbarComponent]
+  imports: [CommonModule, FormsModule, RouterModule],
 })
 export class LoginComponent {
   email: string = '';
@@ -60,7 +59,6 @@ export class LoginComponent {
       this.router.navigate(['/dashboard']);
     } catch (error: any) {
       console.error('❌ Error al iniciar sesión:', error.message || error);
-
 
       if (error?.message?.includes('Email not confirmed')) {
         this.mensaje =
