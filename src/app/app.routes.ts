@@ -65,8 +65,11 @@ export const routes: Routes = [
   loadComponent: () =>
     import('./auth/cambiar.component').then(m => m.CambiarComponent)
 },
-
-
+{
+  path: 'perfil',
+  loadComponent: () => import('./pages/perfil-usuario/perfil.component').then(m => m.PerfilComponent),
+  canActivate: [AuthGuard]
+},
   { path: '**', redirectTo: '' },
 
 

@@ -1,0 +1,89 @@
+.perfil-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background: linear-gradient(to right, #1f1f1f, #2d2d2d);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.perfil-container h2,
+.perfil-container h3 {
+  text-align: center;
+  color: #00bfff;
+  margin-bottom: 20px;
+}
+
+.perfil-info label,
+.cambiar-password label {
+  display: block;
+  margin-top: 15px;
+  font-weight: 500;
+  color: #dddddd;
+}
+
+.perfil-info input,
+.cambiar-password input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 10px;
+  background-color: #3a3a3a;
+  color: #ffffff;
+}
+
+.perfil-info p {
+  margin: 10px 0;
+  font-size: 15px;
+  color: #cccccc;
+}
+
+button {
+  display: inline-block;
+  width: 100%;
+  padding: 10px;
+  background-color: #00bfff;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #0095cc;
+}
+
+hr {
+  margin: 30px 0;
+  border: 0;
+  border-top: 1px solid #444;
+}
+
+@media (max-width: 768px) {
+  .perfil-container {
+    padding: 20px;
+  }
+
+  button {
+    font-size: 16px;
+  }
+}
+.historial-compras {
+  margin-top: 30px;
+}
+
+.entrada-card {
+  background-color: #2e2e2e;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+

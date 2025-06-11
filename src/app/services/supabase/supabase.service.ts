@@ -19,20 +19,37 @@ export class SupabaseService {
   // === AUTENTICACIÓN ===
   // ========================
 
-async registrarUsuario(email: string, password: string, nombre: string) {
-  const { data, error } = await this.supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        full_name: nombre
+  async registrarUsuario(email: string, password: string, nombre: string) {
+    const { data, error } = await this.supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: nombre
+        }
       }
+    });
+
+    if (error || !data.user?.id) return { data, error };
+
+    const perfil = {
+      id: data.user.id,
+      nombre: nombre,
+      correo: email,
+      rol: 'cliente',
+      edad: null
+    };
+
+    const { error: insertError } = await this.supabase
+      .from('usuarios')
+      .insert([perfil]);
+
+    if (insertError) {
+      console.error('❌ Error al insertar perfil:', insertError.message);
     }
-  });
-  return { data, error };
-}
 
-
+    return { data, error };
+  }
 
   async loginUsuario(email: string, password: string) {
     const { data, error } = await this.supabase.auth.signInWithPassword({ email, password });
@@ -62,10 +79,7 @@ async registrarUsuario(email: string, password: string, nombre: string) {
   // ==============================
 
   async insertarPerfilUsuario(datosUsuario: { id: string; nombre: string; correo: string; rol: string; edad?: number }) {
-    const { data, error } = await this.supabase
-      .from('usuarios')
-      .insert([datosUsuario]);
-
+    const { data, error } = await this.supabase.from('usuarios').insert([datosUsuario]);
     if (error) throw error;
     return data;
   }
@@ -73,7 +87,7 @@ async registrarUsuario(email: string, password: string, nombre: string) {
   async getPerfilUsuario(userId: string) {
     const { data, error } = await this.supabase
       .from('usuarios')
-      .select('nombre, correo, rol')
+      .select('nombre, correo, rol, edad')
       .eq('id', userId)
       .maybeSingle();
 
@@ -86,36 +100,19 @@ async registrarUsuario(email: string, password: string, nombre: string) {
   }
 
   async getRolUsuario(userId: string): Promise<'admin' | 'cliente' | null> {
-    console.log('🔍 Buscando rol para userId:', userId);
-
     const { data, error } = await this.supabase
       .from('usuarios')
       .select('rol')
       .eq('id', userId)
-      .maybeSingle(); // ✅ no lanza error si no encuentra
+      .maybeSingle();
 
-    if (error) {
-      console.error('❌ Error al obtener el rol del usuario:', error.message);
-      return null;
-    }
-
-    if (!data) {
-      console.warn('⚠️ No se encontró un perfil para este usuario.');
-      return null;
-    }
-
-    console.log('✅ Rol obtenido:', data.rol);
+    if (error || !data) return null;
     return data.rol as 'admin' | 'cliente' | null;
   }
 
   async getRolActual(): Promise<'admin' | 'cliente' | null> {
     const { data, error } = await this.supabase.auth.getUser();
-
-    if (error || !data?.user) {
-      console.warn('⚠️ No hay usuario autenticado o hubo error al obtenerlo.');
-      return null;
-    }
-
+    if (error || !data?.user) return null;
     return this.getRolUsuario(data.user.id);
   }
 
@@ -151,20 +148,15 @@ async registrarUsuario(email: string, password: string, nombre: string) {
 
     const usuario_id = session.user.id;
 
-    // 1. Obtener evento
     const { data: evento, error: errorEvento } = await this.client
       .from('eventos')
       .select('aforo')
       .eq('id', eventoId)
       .single();
 
-    if (errorEvento || !evento) {
-      console.error('❌ Error al obtener evento:', errorEvento);
-      return null;
-    }
+    if (errorEvento || !evento) return null;
 
-    // 2. Obtener entradas vendidas
-    const { data: ticketsVendidos, error: errorTickets } = await this.client
+    const { data: ticketsVendidos } = await this.client
       .from('tickets')
       .select('cantidad')
       .eq('evento_id', eventoId);
@@ -177,7 +169,6 @@ async registrarUsuario(email: string, password: string, nombre: string) {
       return null;
     }
 
-    // 3. Insertar ticket
     const codigo_qr = uuidv4();
     const { error } = await this.client.from('tickets').insert({
       evento_id: eventoId,
@@ -186,10 +177,7 @@ async registrarUsuario(email: string, password: string, nombre: string) {
       codigo_qr
     });
 
-    if (error) {
-      console.error('Error al crear ticket:', error);
-      return null;
-    }
+    if (error) return null;
 
     return codigo_qr;
   }
