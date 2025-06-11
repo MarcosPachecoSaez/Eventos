@@ -9,10 +9,18 @@ import { Router } from '@angular/router';
   standalone: true,
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.css'],
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule],
 })
 export class RegistroComponent {
-  usuario = {
+  public errores = {
+    nombre: false,
+    email: false,
+    contrasena: false,
+    edad: false,
+  };
+
+  // Modelo de datos enlazado al formulario
+  public formData = {
     nombre: '',
     email: '',
     contrasena: '',
@@ -54,6 +62,15 @@ export class RegistroComponent {
       return;
     }
 
+    // Marcar errores si hay
+    if (!nombreValido) this.errores.nombre = true;
+    if (!emailValido) this.errores.email = true;
+    if (!contrasenaValida) this.errores.contrasena = true;
+    if (!edadValida) this.errores.edad = true;
+
+    if (Object.values(this.errores).some((e) => e)) return;
+
+    // Todo válido, seguir con registro
     try {
       const { data, error } = await this.supabaseService.registrarUsuario(
         this.usuario.email,
