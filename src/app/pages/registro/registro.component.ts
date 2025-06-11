@@ -19,20 +19,23 @@ export class RegistroComponent {
     edad: false,
   };
 
-  // Modelo de datos enlazado al formulario
   public formData = {
     nombre: '',
     email: '',
     contrasena: '',
     edad: null,
-    rol: 'cliente'
+    rol: 'cliente',
   };
 
   correoExistente = false;
   registroExitoso = false;
   campoActivo: string | null = null;
+  usuario: any;
 
-  constructor(private supabaseService: SupabaseService, private router: Router) {}
+  constructor(
+    private supabaseService: SupabaseService,
+    private router: Router
+  ) {}
 
   setCampoActivo(nombre: string) {
     this.campoActivo = nombre;
@@ -51,26 +54,22 @@ export class RegistroComponent {
     if (form.invalid) return;
 
     if (!this.contrasenaValida(this.usuario.contrasena)) {
-      alert('❌ La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.');
+      alert(
+        '❌ La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.'
+      );
       return;
     }
 
-    // Verifica correo duplicado en la tabla "usuarios"
-    const { existe } = await this.supabaseService.verificarCorreoExistente(this.usuario.email);
+    const { existe } = await this.supabaseService.verificarCorreoExistente(
+      this.usuario.email
+    );
     if (existe) {
       this.correoExistente = true;
       return;
     }
 
-    // Marcar errores si hay
-    if (!nombreValido) this.errores.nombre = true;
-    if (!emailValido) this.errores.email = true;
-    if (!contrasenaValida) this.errores.contrasena = true;
-    if (!edadValida) this.errores.edad = true;
-
     if (Object.values(this.errores).some((e) => e)) return;
 
-    // Todo válido, seguir con registro
     try {
       const { data, error } = await this.supabaseService.registrarUsuario(
         this.usuario.email,
@@ -78,7 +77,8 @@ export class RegistroComponent {
         this.usuario.nombre
       );
 
-      if (error || !data.user) throw new Error(error?.message || 'Error al registrar');
+      if (error || !data.user)
+        throw new Error(error?.message || 'Error al registrar');
 
       this.registroExitoso = true;
       console.log('✅ Usuario registrado. Esperando confirmación.');
