@@ -24,34 +24,43 @@ export class RegistroComponent {
     nombre: '',
     email: '',
     contrasena: '',
-    edad: '',
+    edad: null,
+    rol: 'cliente'
   };
 
-  constructor(
-    private supabaseService: SupabaseService,
-    private router: Router
-  ) {}
+  correoExistente = false;
+  registroExitoso = false;
+  campoActivo: string | null = null;
+
+  constructor(private supabaseService: SupabaseService, private router: Router) {}
+
+  setCampoActivo(nombre: string) {
+    this.campoActivo = nombre;
+  }
+
+  limpiarCampoActivo() {
+    this.campoActivo = null;
+  }
+
+  contrasenaValida(password: string): boolean {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
+  }
 
   async registrar(form: NgForm) {
-    // Resetear errores
-    this.errores = {
-      nombre: false,
-      email: false,
-      contrasena: false,
-      edad: false,
-    };
+    console.clear();
+    if (form.invalid) return;
 
-    const { nombre, email, contrasena, edad } = this.formData;
+    if (!this.contrasenaValida(this.usuario.contrasena)) {
+      alert('❌ La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.');
+      return;
+    }
 
-    const nombreLimpio = typeof nombre === 'string' ? nombre.trim() : '';
-    const emailLimpio = typeof email === 'string' ? email.trim() : '';
-    const contrasenaValida =
-      typeof contrasena === 'string' && contrasena.length > 0;
-    const edadNumerica = parseInt(edad, 10);
-
-    const nombreValido = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s-]{2,}$/.test(nombreLimpio);
-    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailLimpio);
-    const edadValida = !isNaN(edadNumerica) && edadNumerica >= 1;
+    // Verifica correo duplicado en la tabla "usuarios"
+    const { existe } = await this.supabaseService.verificarCorreoExistente(this.usuario.email);
+    if (existe) {
+      this.correoExistente = true;
+      return;
+    }
 
     // Marcar errores si hay
     if (!nombreValido) this.errores.nombre = true;
@@ -64,27 +73,20 @@ export class RegistroComponent {
     // Todo válido, seguir con registro
     try {
       const { data, error } = await this.supabaseService.registrarUsuario(
-        emailLimpio,
-        contrasena
+        this.usuario.email,
+        this.usuario.contrasena,
+        this.usuario.nombre
       );
 
-      if (error || !data.user) {
-        throw new Error(error?.message || 'Error al registrar usuario');
-      }
+      if (error || !data.user) throw new Error(error?.message || 'Error al registrar');
 
-      const usuarioConvertido = {
-        id: data.user.id,
-        nombre: nombreLimpio,
-        correo: emailLimpio,
-        rol: 'cliente',
-        edad: edadNumerica,
-      };
-
-      await this.supabaseService.insertarPerfilUsuario(usuarioConvertido);
-      console.log('✅ Usuario registrado con éxito');
-      this.router.navigate(['/login']);
-    } catch (error: any) {
-      console.error('❌ Error al registrar usuario:', error.message || error);
+      this.registroExitoso = true;
+      console.log('✅ Usuario registrado. Esperando confirmación.');
+    } catch (error) {
+      console.error('❌ Error al registrar:', error);
+      alert('Error al registrar usuario.');
     }
   }
 }
+
+export default RegistroComponent;

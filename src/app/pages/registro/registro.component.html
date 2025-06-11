@@ -1,58 +1,33 @@
-<form
-  #form="ngForm"
-  (ngSubmit)="registrar(form)"
-  class="registro-form"
-  novalidate
->
-  <label for="nombre" class="registro-label">¿Cómo te llamas?</label>
-  <input
-    type="text"
-    id="nombre"
-    name="nombre"
-    required
-    [(ngModel)]="formData.nombre"
-    #nombre="ngModel"
-    class="registro-input"
-  />
-  <div *ngIf="errores.nombre" class="error-text">Nombre inválido.</div>
+<div class="registro-container">
+  <h2>Crear cuenta</h2>
 
-  <label for="email" class="registro-label">Tu correo electrónico</label>
-  <input
-    type="email"
-    id="email"
-    name="email"
-    required
-    [(ngModel)]="formData.email"
-    class="registro-input"
-  />
-  <div *ngIf="errores.email" class="error-text">
-    Correo electrónico inválido.
-  </div>
+  <form #form="ngForm" (ngSubmit)="registrar(form)">
+    <div class="campo">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" [(ngModel)]="usuario.nombre" required (focus)="setCampoActivo('nombre')" (blur)="limpiarCampoActivo()">
+    </div>
 
-  <label for="contrasena" class="registro-label"
-    >Crea una contraseña segura</label
-  >
-  <input
-    type="password"
-    id="contrasena"
-    name="contrasena"
-    required
-    [(ngModel)]="formData.contrasena"
-    class="registro-input"
-  />
-  <div *ngIf="errores.contrasena" class="error-text">Contraseña requerida.</div>
+    <div class="campo">
+      <label for="email">Correo electrónico:</label>
+      <input type="email" id="email" name="email" [(ngModel)]="usuario.email" required email (focus)="setCampoActivo('email')" (blur)="limpiarCampoActivo()">
+      <div *ngIf="correoExistente" class="error">❌ Este correo ya está registrado</div>
+    </div>
 
-  <label for="edad" class="registro-label">¿Cuántos años tienes?</label>
-  <input
-    type="number"
-    id="edad"
-    name="edad"
-    required
-    min="1"
-    [(ngModel)]="formData.edad"
-    class="registro-input"
-  />
-  <div *ngIf="errores.edad" class="error-text">Edad inválida.</div>
+    <div class="campo">
+      <label for="contrasena">Contraseña:</label>
+      <input type="password" id="contrasena" name="contrasena" [(ngModel)]="usuario.contrasena" required minlength="8" (focus)="setCampoActivo('contrasena')" (blur)="limpiarCampoActivo()">
+      <small>Debe tener al menos 8 caracteres, 1 mayúscula, 1 minúscula y 1 número.</small>
+    </div>
 
-  <button type="submit" class="registro-button">¡Crear mi cuenta!</button>
-</form>
+    <div class="campo">
+      <label for="edad">Edad:</label>
+      <input type="number" id="edad" name="edad" [(ngModel)]="usuario.edad" required min="18" (focus)="setCampoActivo('edad')" (blur)="limpiarCampoActivo()">
+    </div>
+
+    <button type="submit" [disabled]="form.invalid">Registrarse</button>
+
+    <div *ngIf="registroExitoso" class="exito">
+      ✅ Registro exitoso. Revisa tu correo para confirmar la cuenta.
+    </div>
+  </form>
+</div>

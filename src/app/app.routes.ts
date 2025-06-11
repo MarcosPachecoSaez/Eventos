@@ -93,12 +93,24 @@ export const routes: Routes = [
     canActivate: [MultiRoleGuard],
   },
 
-  {
-    path: 'no-autorizado',
-    loadComponent: () =>
-      import('./pages/no-autorizado/no-autorizado.component').then(
-        (m) => m.default
-      ),
+  { path: 'no-autorizado', loadComponent: () => import('./pages/no-autorizado/no-autorizado.component').then(m => m.default) },
+
+    {
+  path: 'recuperar',
+  loadComponent: () =>
+    import('./auth/recuperar.component').then(m => m.RecuperarComponent)
   },
+  {
+  path: 'cambiar-contrasena',
+  loadComponent: () =>
+    import('./auth/cambiar.component').then(m => m.CambiarComponent)
+},
+
+
   { path: '**', redirectTo: '' },
+
+
+
+
+
 ];

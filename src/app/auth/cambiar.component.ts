@@ -13,7 +13,7 @@ import { SupabaseService } from '../services/supabase/supabase.service';
 })
 export class CambiarComponent {
   nuevaContrasena: string = '';
-  cargando: boolean = false; // 🔥
+  cargando: boolean = false;
 
   constructor(
     private supabaseService: SupabaseService,
@@ -21,20 +21,25 @@ export class CambiarComponent {
   ) {}
 
   async cambiar() {
-    this.cargando = true; // 🔥 Mostrar el loader
+    if (!this.nuevaContrasena || this.nuevaContrasena.length < 8) {
+      alert('La contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+
+    this.cargando = true;
 
     try {
       await this.supabaseService.resetPassword(this.nuevaContrasena);
-      alert('Contraseña actualizada ✅');
+      alert('✅ Contraseña actualizada correctamente.');
 
+      // Redirigir al login luego de 2 segundos
       setTimeout(() => {
         this.router.navigate(['/login']);
       }, 2000);
-
     } catch (error: any) {
-      alert('Error: ' + error.message);
+      alert('❌ Error: ' + error.message);
     } finally {
-      this.cargando = false; // 🔥 Ocultar el loader aunque haya error
+      this.cargando = false;
     }
   }
 }
