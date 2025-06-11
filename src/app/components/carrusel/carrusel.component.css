@@ -1,0 +1,153 @@
+.contenedor-principal h2 {
+  font-size: 36px;
+  background: rgba(255, 0, 0, 0.1);
+}
+
+.carrusel-container {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  height: 100vh;
+}
+
+.carrusel {
+  display: flex;
+  animation: scrollCarrusel 40s linear infinite;
+}
+
+.carrusel.pause {
+  animation-play-state: paused;
+}
+
+@keyframes scrollCarrusel {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.card-evento {
+  min-width: 300px;
+  max-width: 300px;
+  margin-right: 16px;
+  background: #222;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.card-evento:hover {
+  transform: scale(1.05);
+}
+
+.imagen-evento {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.contenido-evento {
+  padding: 0.75rem;
+  color: white;
+  text-align: center;
+}
+
+.carrusel-3d {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  perspective: 1200px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  padding-top: 60px;
+  background: rgba(0, 0, 0, 0);
+}
+
+.card-evento-3d {
+  position: absolute;
+  width: 360px;
+  height: 400px;
+  transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    opacity 0.8s ease;
+  cursor: pointer;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  background: #1e1e1e;
+  color: white;
+  text-align: center;
+  z-index: 1;
+  opacity: 1;
+  padding-top: 12px;
+}
+
+.evento-centro:hover {
+  transform: translateY(-10px) scale(1.2);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+}
+
+.card-evento-3d img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.card-evento-3d .contenido {
+  padding: 1rem;
+}
+
+.evento-centro {
+  transform: translateX(0) scale(1.15);
+  z-index: 5;
+}
+
+.evento-derecha {
+  transform: translateX(380px) scale(0.95) rotateY(-15deg);
+  z-index: 4;
+}
+
+.evento-derecha-far {
+  transform: translateX(560px) scale(0.85) rotateY(-30deg);
+  z-index: 3;
+  opacity: 0.5;
+}
+
+.evento-izquierda {
+  transform: translateX(-380px) scale(0.95) rotateY(15deg);
+  z-index: 4;
+}
+
+.evento-izquierda-far {
+  transform: translateX(-560px) scale(0.85) rotateY(30deg);
+  z-index: 3;
+  opacity: 0.5;
+}
+
+.evento-oculto {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0);
+}
+
+.fondo-centro {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.fondo-centro img {
+  width: 80%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 1rem;
+}

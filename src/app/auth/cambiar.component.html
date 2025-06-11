@@ -1,21 +1,20 @@
-<!-- Mostrar loader mientras se cambia la contraseña -->
+<!-- Loader mientras cambia la contraseña -->
 <div *ngIf="cargando" class="loader-container">
-    <div class="loader"></div>
-    <p>Cambiando contraseña...</p>
-  </div>
-  
-  <!-- Formulario para cambiar contraseña -->
-  <div *ngIf="!cargando">
-    <h2>Cambiar Contraseña</h2>
-    <form (ngSubmit)="cambiar()">
-      <input
-        type="password"
-        placeholder="Nueva Contraseña"
-        [(ngModel)]="nuevaContrasena"
-        name="nuevaContrasena"
-        required
-      />
-      <button type="submit">Actualizar Contraseña</button>
-    </form>
-  </div>
-  
+  <div class="loader"></div>
+  <p>Cambiando contraseña...</p>
+</div>
+
+<!-- Formulario de cambio de contraseña -->
+<div *ngIf="!cargando">
+  <h2>Cambiar Contraseña</h2>
+  <form (ngSubmit)="cambiar()">
+    <input
+      type="password"
+      placeholder="Nueva contraseña"
+      [(ngModel)]="nuevaContrasena"
+      name="nuevaContrasena"
+      required
+    />
+    <button type="submit">Actualizar contraseña</button>
+  </form>
+</div>

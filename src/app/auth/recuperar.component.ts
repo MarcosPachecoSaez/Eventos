@@ -12,15 +12,28 @@ import { SupabaseService } from '../services/supabase/supabase.service';
 })
 export class RecuperarComponent {
   email: string = '';
+  mensaje: string = '';
+  isLoading: boolean = false;
 
   constructor(private supabaseService: SupabaseService) {}
 
   async enviarRecuperacion() {
+    if (!this.email) {
+      this.mensaje = '❌ Por favor ingresa un correo electrónico.';
+      return;
+    }
+
+    this.isLoading = true;
+    this.mensaje = '';
+
     try {
       await this.supabaseService.recuperarContrasena(this.email);
-      alert('Se envió un correo para recuperar la contraseña');
+      this.mensaje = '📨 Se envió un correo para recuperar la contraseña.';
     } catch (error: any) {
-      alert('Error: ' + error.message);
+      console.error('❌ Error al enviar recuperación:', error);
+      this.mensaje = '❌ Error al enviar el correo. Verifica el email.';
+    } finally {
+      this.isLoading = false;
     }
   }
 }
