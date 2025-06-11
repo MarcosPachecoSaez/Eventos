@@ -1,19 +1,25 @@
-<h2>Recuperar contraseña</h2>
+<div class="recuperar-page">
+  <form class="recuperar-form" (ngSubmit)="enviarRecuperacion()" #form="ngForm">
+    <h2>Recuperar contraseña</h2>
 
-<form (ngSubmit)="enviarRecuperacion()" #form="ngForm">
-  <label for="email">Correo electrónico:</label>
-  <input
-    type="email"
-    id="email"
-    name="email"
-    [(ngModel)]="email"
-    required
-    autocomplete="email"
-  />
+    <label for="email">Correo electrónico:</label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      [(ngModel)]="email"
+      required
+      autocomplete="email"
+    />
 
-  <button type="submit" [disabled]="isLoading || !form.valid">
-    {{ isLoading ? 'Enviando...' : 'Enviar recuperación' }}
-  </button>
+    <button type="submit" [disabled]="isLoading || !form.valid">
+      {{ isLoading ? "Enviando..." : "Enviar recuperación" }}
+    </button>
 
-  <p *ngIf="mensaje">{{ mensaje }}</p>
-</form>
+    <p *ngIf="mensaje">{{ mensaje }}</p>
+
+    <button type="button" (click)="volverLogin()" class="volver-btn">
+      Volver al login
+    </button>
+  </form>
+</div>

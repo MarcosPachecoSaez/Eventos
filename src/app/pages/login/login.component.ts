@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 import { RouterModule, Router } from '@angular/router';
 
@@ -12,79 +12,147 @@ import { RouterModule, Router } from '@angular/router';
   imports: [CommonModule, FormsModule, RouterModule],
 })
 export class LoginComponent {
-  email: string = '';
-  password: string = '';
-  mensaje: string = '';
-  emailError: string = '';
-  passwordError: string = '';
+  email = '';
+  password = '';
+  mensaje = '';
+  isLoading = false;
+  correoNoConfirmado = false;
+
+  emailError = false;
+  passwordError = false;
 
   constructor(
     private supabaseService: SupabaseService,
     private router: Router
   ) {}
 
-  async login() {
-    this.mensaje = '';
-    this.emailError = '';
-    this.passwordError = '';
-
-    let hasError = false;
-
-    if (!this.email.trim()) {
-      this.emailError = 'Campo requerido';
-      hasError = true;
-    }
-
-    if (!this.password.trim()) {
-      this.passwordError = 'Campo requerido';
-      hasError = true;
-    }
-
-    if (hasError) {
+  async login(form: NgForm) {
+    if (form.invalid) {
+      this.mensaje = 'Por favor ingresa tus datos correctamente';
+      Object.values(form.controls).forEach((c) => c.markAsTouched());
       return;
     }
 
+    this.isLoading = true;
+    this.mensaje = '';
+    this.correoNoConfirmado = false;
+
     try {
-      const user = await this.supabaseService.loginUsuario(
+      const loginResult = await this.supabaseService.loginUsuario(
         this.email,
         this.password
       );
-
-      if (!user) {
-        this.mensaje = '❌ Email o contraseña incorrectos.';
+      if (!loginResult) {
+        this.mensaje = '❌ Email o contraseña incorrectos';
+        this.isLoading = false;
         return;
       }
 
-      console.log('✅ Usuario autenticado:', user);
-      this.router.navigate(['/dashboard']);
-    } catch (error: any) {
-      console.error('❌ Error al iniciar sesión:', error.message || error);
-
-      if (error?.message?.includes('Email not confirmed')) {
-        this.mensaje =
-          '❌ Tu correo no está confirmado. Revisa tu bandeja de entrada.';
-      } else {
-        this.mensaje = '❌ Error al iniciar sesión. Revisa tus credenciales.';
+      const { data: userData, error: userError } = await this.supabaseService
+        .getClient()
+        .auth.getUser();
+      if (userError || !userData?.user) {
+        this.mensaje = '❌ Error al obtener usuario';
+        this.isLoading = false;
+        return;
       }
+
+      const user = userData.user;
+
+      if (!user.email_confirmed_at) {
+        this.mensaje = '❌ Debes confirmar tu correo antes de iniciar sesión.';
+        this.correoNoConfirmado = true;
+        this.isLoading = false;
+        return;
+      }
+
+      const session = await this.supabaseService.getSession();
+      if (!session) {
+        this.mensaje = '❌ Error al obtener sesión';
+        this.isLoading = false;
+        return;
+      }
+
+      const userId = session.user.id;
+
+      const perfil = await this.supabaseService.getPerfilUsuario(userId);
+      if (!perfil) {
+        const nuevoPerfil = {
+          id: user.id,
+          nombre: user.user_metadata?.['full_name'] || 'Sin nombre',
+          correo: user.email!,
+          rol: 'cliente',
+          edad: 18,
+        };
+
+        try {
+          await this.supabaseService.insertarPerfilUsuario(nuevoPerfil);
+          console.log('✅ Perfil creado automáticamente en tabla usuarios.');
+        } catch (insertError) {
+          console.warn('⚠️ Error al insertar perfil:', insertError);
+        }
+      }
+
+      const rol = await this.supabaseService.getRolUsuario(userId);
+      if (!rol) {
+        this.mensaje = '❌ No se pudo obtener el rol del usuario';
+        this.isLoading = false;
+        return;
+      }
+
+      switch (rol) {
+        case 'admin':
+          this.router.navigate(['/dashboard']);
+          break;
+        case 'cliente':
+          this.router.navigate(['/home']);
+          break;
+        default:
+          this.router.navigate(['/']);
+          break;
+      }
+    } catch (error: any) {
+      console.error('Error en login:', error);
+      this.mensaje = this.getErrorMessage(error);
+    } finally {
+      this.isLoading = false;
     }
   }
 
-  reenviarCorreo() {
-    if (this.email) {
-      this.supabaseService
-        .reenviarCorreoConfirmacion(this.email)
-        .then(() => {
-          this.mensaje =
-            '📨 Correo de confirmación reenviado. Revisa tu bandeja de entrada.';
-        })
-        .catch((error: any) => {
-          console.error('Error al reenviar el correo:', error);
-          this.mensaje = '❌ Error al reenviar el correo de confirmación.';
-        });
+  private getErrorMessage(error: any): string {
+    if (error.message.includes('Invalid login credentials')) {
+      return '❌ Credenciales incorrectas';
+    }
+    if (error.message.includes('Email not confirmed')) {
+      this.correoNoConfirmado = true;
+      return '❌ Confirma tu email primero.';
+    }
+    return '❌ Error al iniciar sesión. Intenta nuevamente.';
+  }
+
+  async reenviarCorreo() {
+    if (!this.email) {
+      this.mensaje = '❌ Ingresa tu email primero';
+      return;
+    }
+
+    this.isLoading = true;
+    try {
+      await this.supabaseService.reenviarCorreoConfirmacion(this.email);
+      this.mensaje =
+        '📨 Correo de confirmación reenviado. Revisa tu bandeja de entrada.';
+      this.correoNoConfirmado = false;
+    } catch (error) {
+      console.error('Error al reenviar correo:', error);
+      this.mensaje = '❌ Error al reenviar el correo. Verifica tu email.';
+    } finally {
+      this.isLoading = false;
     }
   }
 
   irARecuperar() {
-    this.router.navigate(['/registro']);
+    this.router.navigate(['/recuperar']);
   }
 }
+
+export default LoginComponent;

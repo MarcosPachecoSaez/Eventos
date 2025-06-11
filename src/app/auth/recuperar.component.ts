@@ -2,20 +2,24 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '../services/supabase/supabase.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-recuperar',
   standalone: true,
   templateUrl: './recuperar.component.html',
   styleUrls: ['./recuperar.component.css'],
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule],
 })
 export class RecuperarComponent {
   email: string = '';
   mensaje: string = '';
   isLoading: boolean = false;
 
-  constructor(private supabaseService: SupabaseService) {}
+  constructor(
+    private supabaseService: SupabaseService,
+    private router: Router
+  ) {}
 
   async enviarRecuperacion() {
     if (!this.email) {
@@ -35,5 +39,9 @@ export class RecuperarComponent {
     } finally {
       this.isLoading = false;
     }
+  }
+
+  volverLogin() {
+    this.router.navigate(['/login']);
   }
 }

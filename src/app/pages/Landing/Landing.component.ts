@@ -15,8 +15,4 @@ export class LandingComponent {
   irALogin() {
     this.router.navigate(['/login']);
   }
-
-  irARegistro() {
-    this.router.navigate(['/registro']);
-  }
 }

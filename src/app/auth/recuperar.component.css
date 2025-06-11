@@ -1,28 +1,85 @@
+.recuperar-page {
+  font-family: "Segoe UI", sans-serif;
+}
+
 .recuperar-form {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-    margin: 0 auto;
-  }
-  
-  .recuperar-form input {
-    margin-bottom: 10px;
-    padding: 8px;
-    font-size: 16px;
-  }
-  
-  .btn-recuperar {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
-    border-radius: 5px;
-  }
-  
-  .btn-recuperar:hover {
-    background-color: #0056b3;
-  }
-  
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  max-width: 90%;
+  margin: 3rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Encabezado */
+.recuperar-form h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+  color: var(--color-primary);
+}
+
+/* Inputs más espaciosos */
+.recuperar-form input {
+  padding: 0.75rem;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Botón principal */
+.recuperar-form button[type="submit"] {
+  padding: 0.75rem;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.recuperar-form button[type="submit"]:hover:not(:disabled) {
+  background-color: #e55a5a; /* tono rojo */
+}
+
+.recuperar-form button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Botón de volver (solo texto y flecha) */
+.volver-btn {
+  margin-top: 0.5rem;
+  background: none;
+  border: none;
+  color: #777;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Flecha antes del texto */
+.volver-btn::before {
+  content: "←";
+  margin-right: 0.5rem;
+}
+
+/* Hover solo cambia el color a rojo */
+.volver-btn:hover {
+  color: red;
+}
+
+/* Mensaje de feedback */
+.recuperar-form p {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--color-primary);
+}
