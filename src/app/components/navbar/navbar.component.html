@@ -1,13 +1,15 @@
 <header class="navbar">
-  <div class="logo" (click)="irAInicio()">🎟️ eVentos</div>
+  <div class="logo" (click)="irAInicio()">
+    <i class="fas fa-ticket"></i> eVentos
+  </div>
 
   <nav class="nav-links">
     <a
-      routerLink="/"
+      routerLink="/eventos"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
-      >Inicio</a
-    >
+      >Inicio <i class="fa-solid fa-house"></i
+    ></a>
     <a *ngIf="!estaAutenticado" routerLink="/registro" routerLinkActive="active"
       >Registro</a
     >
@@ -16,10 +18,10 @@
     >
 
     <span *ngIf="estaAutenticado" class="nombre-usuario"
-      >Bienvenido, {{ nombreUsuario }}
+      >Hola {{ nombreUsuario }} <i class="fa-solid fa-music"></i>
     </span>
     <button *ngIf="estaAutenticado" (click)="cerrarSesion()" class="logout-btn">
-      Cerrar sesión
+      Cerrar sesión <i class="fa-solid fa-right-from-bracket"></i>
     </button>
   </nav>
 </header>

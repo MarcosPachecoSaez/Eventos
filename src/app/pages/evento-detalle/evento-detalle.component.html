@@ -1,22 +1,40 @@
 <app-navbar></app-navbar>
 
-<main class="detalle-container" *ngIf="evento">
-  <h2>{{ evento.nombre }}</h2>
-  <img *ngIf="evento.imagen_url" [src]="evento.imagen_url" alt="{{ evento.nombre }}" class="evento-img" />
-  <p><strong>Descripción:</strong> {{ evento.descripcion }}</p>
-  <p><strong>Fecha:</strong> {{ evento.fecha | date:'fullDate' }}</p>
-  <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
-  <p><strong>Categoría:</strong> {{ evento.categoria }}</p>
-  <p><strong>Precio:</strong> {{ evento.precio | currency:'CLP' }}</p>
+<main *ngIf="evento" class="card detalle-card">
+  <img
+    *ngIf="evento.imagen_url"
+    [src]="evento.imagen_url"
+    alt="{{ evento.nombre }}"
+    class="detalle-card__img"
+  />
 
-  <!-- ✅ Botón solo visible para clientes autenticados -->
-  <button *ngIf="estaAutenticado && rol === 'cliente'" 
-          class="btn-comprar"
-          [routerLink]="['/compra', evento.id]">
-    Comprar entrada
-  </button>
+  <div class="detalle-card__body">
+    <h2 class="detalle-card__title">{{ evento.nombre }}</h2>
+    <p class="detalle-card__text">
+      <strong>Descripción:</strong> {{ evento.descripcion }}
+    </p>
+    <p class="detalle-card__text">
+      <strong>Fecha:</strong> {{ evento.fecha | date : "fullDate" }}
+    </p>
+    <p class="detalle-card__text"><strong>Lugar:</strong> {{ evento.lugar }}</p>
+    <p class="detalle-card__text">
+      <strong>Categoría:</strong> {{ evento.categoria }}
+    </p>
+    <p class="detalle-card__text">
+      <strong>Precio:</strong> {{ evento.precio | currency : "CLP" }}
+    </p>
 
-  <p *ngIf="!estaAutenticado" class="info-msg">🔒 Inicia sesión para comprar entradas</p>
+    <button
+      *ngIf="estaAutenticado && rol === 'cliente'"
+      class="btn-comprar"
+      [routerLink]="['/compra', evento.id]"
+    >
+      Comprar entrada
+    </button>
+    <p *ngIf="!estaAutenticado" class="info-msg">
+      🔒 Inicia sesión para comprar entradas
+    </p>
 
-  <button class="volver-btn" (click)="volver()">⬅️ Volver</button>
+    <button class="volver-btn" (click)="volver()">⬅️ Volver</button>
+  </div>
 </main>

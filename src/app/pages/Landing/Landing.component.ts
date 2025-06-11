@@ -13,6 +13,6 @@ export class LandingComponent {
   constructor(private router: Router) {}
 
   irALogin() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/home']);
   }
 }

@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 import { RouterModule, Router } from '@angular/router';
+import { FooterComponent } from 'app/components/footer/footer.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, FooterComponent],
 })
 export class LoginComponent {
   email = '';
@@ -20,6 +21,11 @@ export class LoginComponent {
 
   emailError = false;
   passwordError = false;
+
+  showRecuperar = false;
+  recEmail = '';
+  recMensaje = '';
+  recIsLoading = false;
 
   constructor(
     private supabaseService: SupabaseService,
@@ -150,8 +156,33 @@ export class LoginComponent {
     }
   }
 
-  irARecuperar() {
-    this.router.navigate(['/recuperar']);
+  abrirRecuperar() {
+    this.recEmail = '';
+    this.recMensaje = '';
+    this.recIsLoading = false;
+    this.showRecuperar = true;
+  }
+
+  cerrarRecuperar() {
+    this.showRecuperar = false;
+  }
+
+  // ——— Método de recuperación ———
+  async enviarRecuperacion() {
+    if (!this.recEmail) {
+      this.recMensaje = '❌ Por favor ingresa un correo electrónico.';
+      return;
+    }
+    this.recIsLoading = true;
+    this.recMensaje = '';
+    try {
+      await this.supabaseService.recuperarContrasena(this.recEmail);
+      this.recMensaje = '📨 Se envió un correo para recuperar la contraseña.';
+    } catch {
+      this.recMensaje = '❌ Error al enviar el correo. Verifica el email.';
+    } finally {
+      this.recIsLoading = false;
+    }
   }
 }
 

@@ -4,14 +4,28 @@ import { environment } from '../../../environments/environment';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SupabaseService {
   private supabase: SupabaseClient;
   public client: SupabaseClient;
 
   constructor() {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseAnonKey);
+    this.supabase = createClient(
+      environment.supabaseUrl,
+      environment.supabaseAnonKey,
+      {
+        auth: {
+          lock: async (
+            _key: string,
+            _acquireTimeout: number,
+            callback: () => Promise<any>
+          ) => {
+            return await callback();
+          },
+        },
+      }
+    );
     this.client = this.supabase;
   }
 
@@ -25,9 +39,9 @@ export class SupabaseService {
       password,
       options: {
         data: {
-          full_name: nombre
-        }
-      }
+          full_name: nombre,
+        },
+      },
     });
 
     if (error || !data.user?.id) return { data, error };
@@ -37,7 +51,7 @@ export class SupabaseService {
       nombre: nombre,
       correo: email,
       rol: 'cliente',
-      edad: null
+      edad: null,
     };
 
     const { error: insertError } = await this.supabase
@@ -52,7 +66,10 @@ export class SupabaseService {
   }
 
   async loginUsuario(email: string, password: string) {
-    const { data, error } = await this.supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await this.supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
     if (error) throw error;
     return data;
   }
@@ -78,8 +95,16 @@ export class SupabaseService {
   // === PERFILES Y ROLES ===
   // ==============================
 
-  async insertarPerfilUsuario(datosUsuario: { id: string; nombre: string; correo: string; rol: string; edad?: number }) {
-    const { data, error } = await this.supabase.from('usuarios').insert([datosUsuario]);
+  async insertarPerfilUsuario(datosUsuario: {
+    id: string;
+    nombre: string;
+    correo: string;
+    rol: string;
+    edad?: number;
+  }) {
+    const { data, error } = await this.supabase
+      .from('usuarios')
+      .insert([datosUsuario]);
     if (error) throw error;
     return data;
   }
@@ -142,7 +167,10 @@ export class SupabaseService {
   // === TICKETS ===
   // ========================
 
-  async comprarEntradas(eventoId: string, cantidad: number): Promise<string | null> {
+  async comprarEntradas(
+    eventoId: string,
+    cantidad: number
+  ): Promise<string | null> {
     const session = await this.getSession();
     if (!session) return null;
 
@@ -161,7 +189,8 @@ export class SupabaseService {
       .select('cantidad')
       .eq('evento_id', eventoId);
 
-    const totalVendidas = ticketsVendidos?.reduce((acc, t) => acc + t.cantidad, 0) || 0;
+    const totalVendidas =
+      ticketsVendidos?.reduce((acc, t) => acc + t.cantidad, 0) || 0;
     const disponibles = evento.aforo - totalVendidas;
 
     if (cantidad > disponibles) {
@@ -174,7 +203,7 @@ export class SupabaseService {
       evento_id: eventoId,
       usuario_id,
       cantidad,
-      codigo_qr
+      codigo_qr,
     });
 
     if (error) return null;
@@ -190,7 +219,8 @@ export class SupabaseService {
 
     const { data } = await this.client
       .from('tickets')
-      .select(`
+      .select(
+        `
         id,
         cantidad,
         codigo_qr,
@@ -201,7 +231,8 @@ export class SupabaseService {
           fecha,
           precio
         )
-      `)
+      `
+      )
       .eq('usuario_id', usuario_id);
 
     return data || [];
@@ -212,19 +243,24 @@ export class SupabaseService {
   // ========================
 
   async reenviarCorreoConfirmacion(email: string): Promise<void> {
-    const { error } = await this.supabase.auth.resend({ type: 'signup', email });
+    const { error } = await this.supabase.auth.resend({
+      type: 'signup',
+      email,
+    });
     if (error) throw error;
   }
 
   async recuperarContrasena(email: string): Promise<void> {
     const { error } = await this.supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'http://localhost:4200/cambiar-contrasena'
+      redirectTo: 'http://localhost:4200/cambiar-contrasena',
     });
     if (error) throw error;
   }
 
   async resetPassword(newPassword: string) {
-    const { data, error } = await this.supabase.auth.updateUser({ password: newPassword });
+    const { data, error } = await this.supabase.auth.updateUser({
+      password: newPassword,
+    });
     if (error) throw error;
     return data;
   }
@@ -233,7 +269,9 @@ export class SupabaseService {
   // === VALIDACIÓN ===
   // ========================
 
-  async verificarCorreoExistente(correo: string): Promise<{ existe: boolean; error: any }> {
+  async verificarCorreoExistente(
+    correo: string
+  ): Promise<{ existe: boolean; error: any }> {
     const { data, error } = await this.supabase
       .from('usuarios')
       .select('correo')

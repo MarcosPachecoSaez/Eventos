@@ -3,7 +3,7 @@
 <section class="home-container">
   <div class="hero-section">
     <h1 class="titulo" *ngIf="estaAutenticado; else mensajeGenerico">
-      👋 Hola, {{ usuario.nombre }}
+      Hola, {{ usuario.nombre }} <i class="fa-solid fa-play"></i>
     </h1>
     <ng-template #mensajeGenerico>
       <h1 class="titulo">🎟️ Bienvenido a <span class="marca">eVentos</span></h1>

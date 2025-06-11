@@ -28,7 +28,6 @@ export const routes: Routes = [
     path: 'home',
     loadComponent: () =>
       import('./pages/home/home.component').then((m) => m.HomeComponent),
-    canActivate: [AuthGuard], // opcional: protege esta página solo para usuarios logueados
   },
 
   // ADMIN CRUD
@@ -93,27 +92,31 @@ export const routes: Routes = [
     canActivate: [MultiRoleGuard],
   },
 
-  { path: 'no-autorizado', loadComponent: () => import('./pages/no-autorizado/no-autorizado.component').then(m => m.default) },
+  {
+    path: 'no-autorizado',
+    loadComponent: () =>
+      import('./pages/no-autorizado/no-autorizado.component').then(
+        (m) => m.default
+      ),
+  },
 
-    {
-  path: 'recuperar',
-  loadComponent: () =>
-    import('./auth/recuperar.component').then(m => m.RecuperarComponent)
+  {
+    path: 'recuperar',
+    loadComponent: () =>
+      import('./auth/recuperar.component').then((m) => m.RecuperarComponent),
   },
   {
-  path: 'cambiar-contrasena',
-  loadComponent: () =>
-    import('./auth/cambiar.component').then(m => m.CambiarComponent)
-},
-{
-  path: 'perfil',
-  loadComponent: () => import('./pages/perfil-usuario/perfil.component').then(m => m.PerfilComponent),
-  canActivate: [AuthGuard]
-},
+    path: 'cambiar-contrasena',
+    loadComponent: () =>
+      import('./auth/cambiar.component').then((m) => m.CambiarComponent),
+  },
+  {
+    path: 'perfil',
+    loadComponent: () =>
+      import('./pages/perfil-usuario/perfil.component').then(
+        (m) => m.PerfilComponent
+      ),
+    canActivate: [AuthGuard],
+  },
   { path: '**', redirectTo: '' },
-
-
-
-
-
 ];
