@@ -16,12 +16,21 @@
     <a *ngIf="!estaAutenticado" routerLink="/login" routerLinkActive="active"
       >Iniciar sesión</a
     >
-
-    <span *ngIf="estaAutenticado" class="nombre-usuario"
-      >Hola {{ nombreUsuario }} <i class="fa-solid fa-music"></i>
-    </span>
-    <button *ngIf="estaAutenticado" (click)="cerrarSesion()" class="logout-btn">
-      Cerrar sesión <i class="fa-solid fa-right-from-bracket"></i>
-    </button>
+    <div *ngIf="estaAutenticado" class="dropdown">
+      <button class="dropbtn" (click)="toggleDropdown()">
+        Hola {{ nombreUsuario
+        }}<i
+          class="fa-solid fa-caret-up arrow-icon"
+          [class.open]="isDropdownOpen"
+        ></i>
+      </button>
+      <div class="dropdown-content" [class.show]="isDropdownOpen">
+        <a routerLink="/mis-entradas">🎫 Mis entradas</a>
+        <a routerLink="/perfil">👤 Perfil</a>
+        <a (click)="cerrarSesion()"
+          >Cerrar sesión <i class="fa-solid fa-right-from-bracket"></i
+        ></a>
+      </div>
+    </div>
   </nav>
 </header>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -14,10 +14,23 @@ import { SupabaseService } from '../../services/supabase/supabase.service';
 export class NavbarComponent implements OnInit {
   estaAutenticado: boolean = false;
   nombreUsuario: string = '';
+  isDropdownOpen = false;
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  @HostListener('document:click', ['$event.target'])
+  onClickOutside(target: HTMLElement) {
+    if (!this.elRef.nativeElement.contains(target)) {
+      this.isDropdownOpen = false;
+    }
+  }
 
   constructor(
     private supabaseService: SupabaseService,
-    private router: Router
+    private router: Router,
+    private elRef: ElementRef
   ) {}
 
   async ngOnInit() {

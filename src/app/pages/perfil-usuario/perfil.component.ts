@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '../../services/supabase/supabase.service';
+import { NavbarComponent } from 'app/components/navbar/navbar.component';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NavbarComponent],
   templateUrl: './perfil.component.html',
-  styleUrls: ['./perfil.component.css']
+  styleUrls: ['./perfil.component.css'],
 })
 export class PerfilComponent implements OnInit {
   userId: string = '';
@@ -43,24 +44,24 @@ export class PerfilComponent implements OnInit {
     this.entradas = await this.supabaseService.getMisTickets();
   }
 
- async guardarCambios(): Promise<void> {
-  const { error } = await this.supabaseService.getClient()
-    .from('usuarios')
-    .update({
-      nombre: this.nuevoNombre,
-      edad: this.nuevaEdad
-    })
-    .eq('id', this.userId);
+  async guardarCambios(): Promise<void> {
+    const { error } = await this.supabaseService
+      .getClient()
+      .from('usuarios')
+      .update({
+        nombre: this.nuevoNombre,
+        edad: this.nuevaEdad,
+      })
+      .eq('id', this.userId);
 
-  if (error) {
-    alert('❌ No se pudo guardar los cambios.');
-    console.error(error);
-  } else {
-    alert('✅ Datos actualizados.');
-    this.nombre = this.nuevoNombre; // 👈 esto asegura que se actualice lo mostrado
-    this.edad = this.nuevaEdad;
-    this.modoEdicion = false; // 👈 ocultamos el campo editable después de guardar
+    if (error) {
+      alert('❌ No se pudo guardar los cambios.');
+      console.error(error);
+    } else {
+      alert('✅ Datos actualizados.');
+      this.nombre = this.nuevoNombre; // 👈 esto asegura que se actualice lo mostrado
+      this.edad = this.nuevaEdad;
+      this.modoEdicion = false; // 👈 ocultamos el campo editable después de guardar
+    }
   }
-}
-
 }

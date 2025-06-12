@@ -23,14 +23,13 @@ export class RegistroComponent {
     nombre: '',
     email: '',
     contrasena: '',
-    edad: null,
+    edad: null as number | null,
     rol: 'cliente',
   };
 
   correoExistente = false;
   registroExitoso = false;
   campoActivo: string | null = null;
-  usuario: any;
 
   constructor(
     private supabaseService: SupabaseService,
@@ -53,15 +52,17 @@ export class RegistroComponent {
     console.clear();
     if (form.invalid) return;
 
-    if (!this.contrasenaValida(this.usuario.contrasena)) {
+    // Validar contraseña fuerte
+    if (!this.contrasenaValida(this.formData.contrasena)) {
       alert(
         '❌ La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.'
       );
       return;
     }
 
+    // Verificar correo existente
     const { existe } = await this.supabaseService.verificarCorreoExistente(
-      this.usuario.email
+      this.formData.email
     );
     if (existe) {
       this.correoExistente = true;
@@ -72,9 +73,9 @@ export class RegistroComponent {
 
     try {
       const { data, error } = await this.supabaseService.registrarUsuario(
-        this.usuario.email,
-        this.usuario.contrasena,
-        this.usuario.nombre
+        this.formData.email,
+        this.formData.contrasena,
+        this.formData.nombre
       );
 
       if (error || !data.user)
@@ -88,5 +89,4 @@ export class RegistroComponent {
     }
   }
 }
-
 export default RegistroComponent;

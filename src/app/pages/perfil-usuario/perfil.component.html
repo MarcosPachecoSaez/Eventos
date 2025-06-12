@@ -1,25 +1,26 @@
+<app-navbar></app-navbar>
+
 <div class="perfil-container">
   <h2>Mi Perfil</h2>
 
   <div class="perfil-info">
     <p><strong>Correo:</strong> {{ correo }}</p>
-    
 
-  <p><strong>Nombre:</strong> {{ nombre }}</p>
+    <p><strong>Nombre:</strong> {{ nombre }}</p>
 
-<!-- Botón para activar edición -->
-<button (click)="modoEdicion = !modoEdicion">
-  {{ modoEdicion ? 'Cancelar edición' : 'Editar nombre' }}
-</button>
+    <!-- Botón para activar edición -->
+    <button (click)="modoEdicion = !modoEdicion">
+      {{ modoEdicion ? "Cancelar edición" : "Editar nombre" }}
+    </button>
 
-<!-- Campo editable solo si está en modo edición -->
-<div *ngIf="modoEdicion">
-  <label>
-    Nuevo nombre:
-    <input type="text" [(ngModel)]="nuevoNombre" />
-  </label>
-  <button (click)="guardarCambios()">Guardar cambios</button>
-</div>
+    <!-- Campo editable solo si está en modo edición -->
+    <div *ngIf="modoEdicion">
+      <label>
+        Nuevo nombre:
+        <input type="text" [(ngModel)]="nuevoNombre" />
+      </label>
+      <button (click)="guardarCambios()">Guardar cambios</button>
+    </div>
 
     <label>
       Edad:
@@ -42,7 +43,11 @@
       <p><strong>Evento:</strong> {{ ticket.eventos.nombre }}</p>
       <p><strong>Fecha:</strong> {{ ticket.eventos.fecha | date }}</p>
       <p><strong>Cantidad:</strong> {{ ticket.cantidad }}</p>
-      <p><strong>Total pagado:</strong> ${{ ticket.eventos.precio * ticket.cantidad }}</p>
+      <p>
+        <strong>Total pagado:</strong> ${{
+          ticket.eventos.precio * ticket.cantidad
+        }}
+      </p>
       <hr />
     </div>
   </div>
