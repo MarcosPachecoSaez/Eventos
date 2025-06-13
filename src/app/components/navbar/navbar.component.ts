@@ -15,6 +15,7 @@ export class NavbarComponent implements OnInit {
   estaAutenticado: boolean = false;
   nombreUsuario: string = '';
   isDropdownOpen = false;
+  loaded = false;
 
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
@@ -39,7 +40,6 @@ export class NavbarComponent implements OnInit {
 
     if (session) {
       const userId = session.user.id;
-
       const { data: usuario, error } = await this.supabaseService.client
         .from('usuarios')
         .select('nombre')
@@ -50,6 +50,7 @@ export class NavbarComponent implements OnInit {
         this.nombreUsuario = usuario.nombre;
       }
     }
+    this.loaded = true;
   }
   menuAbierto = false;
 

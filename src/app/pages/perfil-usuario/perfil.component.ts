@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 import { NavbarComponent } from 'app/components/navbar/navbar.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavbarComponent],
+  imports: [CommonModule, FormsModule, NavbarComponent, RouterModule],
   templateUrl: './perfil.component.html',
   styleUrls: ['./perfil.component.css'],
 })
@@ -19,7 +20,7 @@ export class PerfilComponent implements OnInit {
   rol: string = '';
   nuevoNombre: string = '';
   nuevaEdad: number | null = null;
-  modoEdicion: boolean = false; // 👈 NUEVO
+  modoEdicion: boolean = false;
 
   entradas: any[] = [];
 

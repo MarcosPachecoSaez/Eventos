@@ -3,7 +3,7 @@
     <i class="fas fa-ticket"></i> eVentos
   </div>
 
-  <nav class="nav-links">
+  <nav class="nav-links" *ngIf="loaded">
     <a
       routerLink="/eventos"
       routerLinkActive="active"
@@ -25,11 +25,21 @@
         ></i>
       </button>
       <div class="dropdown-content" [class.show]="isDropdownOpen">
-        <a routerLink="/mis-entradas">🎫 Mis entradas</a>
-        <a routerLink="/perfil">👤 Perfil</a>
-        <a (click)="cerrarSesion()"
-          >Cerrar sesión <i class="fa-solid fa-right-from-bracket"></i
-        ></a>
+        <div class="drop-item">
+          <a routerLink="/mis-entradas"
+            ><i class="fa-solid fa-ticket-simple"></i> Mis entradas</a
+          >
+        </div>
+        <div class="drop-item">
+          <a routerLink="/perfil"
+            ><i class="fa-solid fa-user-large"></i> Perfil</a
+          >
+        </div>
+        <div class="drop-item">
+          <a (click)="cerrarSesion()"
+            >Cerrar sesión <i class="fa-solid fa-right-from-bracket"></i
+          ></a>
+        </div>
       </div>
     </div>
   </nav>
