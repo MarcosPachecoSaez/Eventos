@@ -16,7 +16,7 @@
       [ngClass]="obtenerClase(i)"
       (click)="manejarClick(i)"
     >
-      <img [src]="evento.imagen_url" alt="{{ evento.nombre }}" />
+      
       <div class="contenido">
         <h3>{{ evento.nombre }}</h3>
         <p>{{ evento.lugar }} - {{ evento.fecha | date : "longDate" }}</p>
