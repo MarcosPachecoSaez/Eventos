@@ -55,6 +55,14 @@ export const routes: Routes = [
       ),
     canActivate: [adminGuard],
   },
+  {
+    path: 'evento-detalle',
+    loadComponent: () =>
+      import('./pages/evento-detalle/evento-detalle.component').then(
+        (m) => m.EventoDetalleComponent
+      ),
+    canActivate: [adminGuard],
+  },
 
   // CLIENTE
   {

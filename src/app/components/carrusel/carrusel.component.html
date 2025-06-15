@@ -16,13 +16,13 @@
       [ngClass]="obtenerClase(i)"
       (click)="manejarClick(i)"
     >
-      
       <div class="contenido">
         <h3>{{ evento.nombre }}</h3>
         <p>{{ evento.lugar }} - {{ evento.fecha | date : "longDate" }}</p>
       </div>
       <div class="fondo-centro">
-        <img src="../../../assets/images/concert.jpg" alt="Imagen central" />
+        <!-- Reemplazamos la imagen fija con la ruta de la imagen almacenada en la base de datos -->
+        <img [src]="evento.imagen_url" alt="Imagen de {{ evento.nombre }}" />
       </div>
     </div>
   </div>
