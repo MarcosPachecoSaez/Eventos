@@ -1,3 +1,4 @@
+// carrusel.component.ts
 import {
   Component,
   Input,
@@ -17,83 +18,41 @@ import { CommonModule } from '@angular/common';
 })
 export class CarruselComponent implements OnInit, OnDestroy, OnChanges {
   @Input() eventos: any[] = [];
-  @Input() cargando: boolean = false;
+  @Input() cargando = false;
 
-  eventoSeleccionado: any = null;
-  mostrarModal: boolean = false;
   centro = 0;
   intervaloCarrusel: any;
   pausado = false;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['eventos'] && this.eventos.length > 0) {
+  ngOnInit() {
+    if (this.eventos.length) this.iniciarRotacion();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['eventos'] && this.eventos.length) {
+      this.centro = 0;
       this.iniciarRotacion();
     }
   }
 
-  ngOnInit(): void {
-    if (this.eventos.length > 0) this.iniciarRotacion();
-  }
-
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     clearInterval(this.intervaloCarrusel);
   }
 
   iniciarRotacion() {
+    clearInterval(this.intervaloCarrusel);
     this.intervaloCarrusel = setInterval(() => {
       if (!this.pausado) {
-        this.centro = (this.centro + 1) % this.eventos.length;
+        this.next();
       }
     }, 4000);
   }
 
-  obtenerClase(index: number): string {
-    const total = this.eventos.length;
-    const relativeIndex = (index - this.centro + total) % total;
-    switch (relativeIndex) {
-      case 0:
-        return 'evento-centro';
-      case 1:
-        return 'evento-derecha';
-      case 2:
-        return 'evento-derecha-far';
-      case total - 1:
-        return 'evento-izquierda';
-      case total - 2:
-        return 'evento-izquierda-far';
-      default:
-        return 'evento-oculto';
-    }
+  next() {
+    this.centro = (this.centro + 1) % this.eventos.length;
   }
 
-  manejarClick(index: number) {
-    const total = this.eventos.length;
-    const relIndex = (index - this.centro + total) % total;
-
-    if (relIndex === 1 || relIndex === 2) {
-      this.centro = (this.centro + 1) % total;
-    } else if (relIndex === total - 1 || relIndex === total - 2) {
-      this.centro = (this.centro - 1 + total) % total;
-    } else if (relIndex === 0) {
-      this.abrirModal(this.eventos[index]);
-    }
-  }
-
-  abrirModal(evento: any) {
-    this.eventoSeleccionado = evento;
-    this.mostrarModal = true;
-  }
-
-  cerrarModal() {
-    this.mostrarModal = false;
-    this.eventoSeleccionado = null;
-  }
-
-  editarEvento(evento: any) {
-    console.warn('Agregar lógica para editar', evento);
-  }
-
-  eliminarEvento(id: string) {
-    console.warn('Agregar lógica para eliminar', id);
+  prev() {
+    this.centro = (this.centro - 1 + this.eventos.length) % this.eventos.length;
   }
 }
