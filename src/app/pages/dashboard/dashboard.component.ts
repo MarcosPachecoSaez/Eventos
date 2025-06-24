@@ -34,7 +34,10 @@ export class DashboardComponent implements OnInit {
   async ngOnInit() {
     const user = await this.supabaseService.getUser();
     this.usuario = user?.email ?? 'Usuario';
-    this.rol = await this.supabaseService.getRolUsuario(user.id);
+
+    // Obtener el perfil del usuario y solo asignar el rol
+    const perfil = await this.supabaseService.getPerfilUsuario(user.id);
+    this.rol = perfil?.rol ?? null; // Asignar solo el rol
 
     if (this.esAdmin() || this.esCliente()) {
       this.todosLosEventos = await this.supabaseService.getEventos();

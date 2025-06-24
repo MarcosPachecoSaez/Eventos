@@ -20,15 +20,24 @@ export class CambiarComponent {
     private router: Router
   ) {}
 
+  // Función para cambiar la contraseña
   async cambiar() {
+    // Validación de la contraseña
     if (!this.nuevaContrasena || this.nuevaContrasena.length < 8) {
       alert('La contraseña debe tener al menos 8 caracteres.');
       return;
     }
 
-    this.cargando = true;
+    // Verificar si la contraseña cumple con la política de seguridad (mayúscula, minúscula y número)
+    if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(this.nuevaContrasena)) {
+      alert('La contraseña debe contener al menos una mayúscula, una minúscula y un número.');
+      return;
+    }
+
+    this.cargando = true;  // Mostrar el indicador de carga
 
     try {
+      // Intentar cambiar la contraseña a través del servicio
       await this.supabaseService.resetPassword(this.nuevaContrasena);
       alert('✅ Contraseña actualizada correctamente.');
 
@@ -37,8 +46,10 @@ export class CambiarComponent {
         this.router.navigate(['/login']);
       }, 2000);
     } catch (error: any) {
-      alert('❌ Error: ' + error.message);
+      // Manejo del error en caso de que ocurra un fallo
+      alert('❌ Error: ' + (error instanceof Error ? error.message : 'Error desconocido'));
     } finally {
+      // Ocultar el indicador de carga al finalizar
       this.cargando = false;
     }
   }

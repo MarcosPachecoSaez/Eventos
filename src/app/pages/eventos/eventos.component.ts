@@ -29,7 +29,12 @@ export class EventosComponent implements OnInit {
     try {
       const session = await this.supabaseService.getSession();
       if (session) {
-        this.rol = await this.supabaseService.getRolUsuario(session.user.id);
+        // Obtenemos el perfil del usuario, que contiene el rol
+        const perfil = await this.supabaseService.getPerfilUsuario(session.user.id);
+        // Asignamos el rol extraído del perfil
+        if (perfil) {
+          this.rol = perfil.rol; // Aquí asignamos solo el valor de 'rol'
+        }
       }
 
       this.eventos = await this.supabaseService.getEventos();

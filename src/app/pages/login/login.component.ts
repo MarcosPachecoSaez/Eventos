@@ -81,6 +81,7 @@ export class LoginComponent {
 
       const userId = session.user.id;
 
+      // Usamos getPerfilUsuario para obtener el perfil completo, incluyendo el rol
       const perfil = await this.supabaseService.getPerfilUsuario(userId);
       if (!perfil) {
         const nuevoPerfil = {
@@ -99,7 +100,8 @@ export class LoginComponent {
         }
       }
 
-      const rol = await this.supabaseService.getRolUsuario(userId);
+      // Obtener el rol del perfil correctamente (accedemos al valor 'rol' del objeto)
+      const rol = perfil?.rol; // Accedemos directamente al rol del perfil
       if (!rol) {
         this.mensaje = '❌ No se pudo obtener el rol del usuario';
         this.isLoading = false;
