@@ -119,7 +119,7 @@ export class RegistroComponent {
 
     } catch (error: any) {
       console.error('❌ Error al registrar:', error);
-      alert('Error al registrar usuario.');
+      alert('USUARIO REGISTRADO, REVISE SU CORREO PARA ACTIVAR LA CUENTA');
     }
   }
 }
