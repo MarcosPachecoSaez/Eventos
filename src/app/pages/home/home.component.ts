@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 import { NavbarComponent } from 'app/components/navbar/navbar.component';
 import { CarruselComponent } from 'app/components/carrusel/carrusel.component';
 import { FooterComponent } from 'app/components/footer/footer.component';
+import { EventosComponent } from '../eventos/eventos.component';
 
 @Component({
   selector: 'app-home',
@@ -14,12 +15,13 @@ import { FooterComponent } from 'app/components/footer/footer.component';
     RouterModule,
     NavbarComponent,
     CarruselComponent,
+    EventosComponent,
     FooterComponent,
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   eventos: any[] = [];
   usuario: any = {};
   estaAutenticado: boolean = false;
@@ -36,6 +38,9 @@ export class HomeComponent implements OnInit {
     private supabaseService: SupabaseService,
     private router: Router
   ) {}
+  ngOnDestroy(): void {
+    this.detenerCarrusel();
+  }
 
   async ngOnInit(): Promise<void> {
     try {

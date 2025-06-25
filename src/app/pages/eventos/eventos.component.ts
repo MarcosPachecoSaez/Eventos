@@ -2,14 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase/supabase.service';
-import { NavbarComponent } from '../../components/navbar/navbar.component';
 
 @Component({
   selector: 'app-eventos',
   standalone: true,
-  imports: [CommonModule, RouterModule, NavbarComponent],
+  imports: [CommonModule, RouterModule],
   templateUrl: './eventos.component.html',
-  styleUrls: ['./eventos.component.css']
+  styleUrls: ['./eventos.component.css'],
 })
 export class EventosComponent implements OnInit {
   eventos: any[] = [];
@@ -30,7 +29,9 @@ export class EventosComponent implements OnInit {
       const session = await this.supabaseService.getSession();
       if (session) {
         // Obtenemos el perfil del usuario, que contiene el rol
-        const perfil = await this.supabaseService.getPerfilUsuario(session.user.id);
+        const perfil = await this.supabaseService.getPerfilUsuario(
+          session.user.id
+        );
         // Asignamos el rol extraído del perfil
         if (perfil) {
           this.rol = perfil.rol; // Aquí asignamos solo el valor de 'rol'
@@ -69,7 +70,7 @@ export class EventosComponent implements OnInit {
       .eq('id', id);
 
     if (!error) {
-      this.eventos = this.eventos.filter(e => e.id !== id);
+      this.eventos = this.eventos.filter((e) => e.id !== id);
       this.cerrarModal();
       alert('✅ Evento eliminado.');
     } else {

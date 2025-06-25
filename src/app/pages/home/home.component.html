@@ -8,11 +8,13 @@
     <ng-template #mensajeGenerico>
       <h1 class="titulo">🎟️ Bienvenido a <span class="marca">eVentos</span></h1>
     </ng-template>
-    <p class="subtitulo">Vive la experiencia de los mejores eventos de la quinta región</p>
+    <p class="subtitulo">
+      Vive la experiencia de los mejores eventos de la quinta región
+    </p>
   </div>
 
   <app-carrusel [eventos]="eventos" [cargando]="cargando"></app-carrusel>
-
+  <app-eventos></app-eventos>
   <div *ngIf="!estaAutenticado" class="login-btn-container">
     <button class="login-btn" (click)="irALogin()">Iniciar sesión</button>
   </div>

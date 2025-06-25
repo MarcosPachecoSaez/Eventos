@@ -66,6 +66,6 @@ export class NavbarComponent implements OnInit {
   }
 
   irAInicio(): void {
-    this.router.navigate(['/eventos']);
+    this.router.navigate(['/home']);
   }
 }
