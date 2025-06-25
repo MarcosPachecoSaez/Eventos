@@ -62,7 +62,7 @@ export class NavbarComponent implements OnInit {
     await this.supabaseService.client.auth.signOut();
     this.estaAutenticado = false;
     this.nombreUsuario = '';
-    this.router.navigate(['/login']);
+    this.router.navigate(['/home']);
   }
 
   irAInicio(): void {
