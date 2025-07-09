@@ -2,7 +2,16 @@
 
 <main class="dashboard-container">
   <section class="bienvenida">
-    <h1>Hola, {{ usuario }} 👋</h1>
+    <h1>Hola, 
+      <span class="email-container">
+        <span class="email-truncated" (click)="toggleTooltip()" [title]="usuario">
+          {{ getDisplayName() }} 👋
+        </span>
+        <div class="email-tooltip" [class.show]="showTooltip">
+          {{ usuario }}
+        </div>
+      </span>
+    </h1>
     <p class="subtitulo">Explora y administra los eventos desde tu panel personal</p>
   </section>
 
@@ -14,8 +23,8 @@
   <section class="acciones">
     <button *ngIf="esAdmin()" (click)="irACrearEvento()">➕ Crear Evento</button>
     <button (click)="irABuscarEventos()">🔍 Buscar Eventos</button>
-    <button>🎫 Mis Entradas</button>
-    <button>👤 Perfil</button>
+    <button (click)="irAEntradas()">🎫 Mis Entradas</button>
+    <button (click)="irAPerfil()">👤 Perfil</button>
   </section>
 
   <!-- 🔒 ADMIN: Gestión de eventos -->
