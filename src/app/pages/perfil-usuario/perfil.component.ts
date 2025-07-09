@@ -21,6 +21,7 @@ export class PerfilComponent implements OnInit {
   nuevoNombre: string = '';
   nuevaEdad: number | null = null;
   modoEdicion: boolean = false;
+  showTooltip = false;
 
   entradas: any[] = [];
 
@@ -60,9 +61,53 @@ export class PerfilComponent implements OnInit {
       console.error(error);
     } else {
       alert('✅ Datos actualizados.');
-      this.nombre = this.nuevoNombre; // 👈 esto asegura que se actualice lo mostrado
+      this.nombre = this.nuevoNombre; //  esto asegura que se actualice lo mostrado
       this.edad = this.nuevaEdad;
-      this.modoEdicion = false; // 👈 ocultamos el campo editable después de guardar
+      this.modoEdicion = false; //  ocultamos el campo editable después de guardar
+    }
+  }
+
+  getDisplayName(): string {
+    if (!this.nombre) return '';
+
+    const maxLength = 10;
+    if (this.nombre.length <= maxLength) {
+      return this.nombre;
+    }
+
+    return `${this.nombre.substring(0, maxLength - 3)}...`;
+  }
+
+  getDisplayEmail(): string {
+    if (!this.correo) return '';
+
+    return this.truncateEmail(this.correo);
+  }
+
+  truncateEmail(email: string): string {
+    const maxLength = 22;
+
+    if (email.length <= maxLength) {
+      return email;
+    }
+
+    const [localPart, domain] = email.split('@');
+    const availableLength = maxLength - domain.length - 4;
+
+    if (availableLength > 0) {
+      return `${localPart.substring(0, availableLength)}...@${domain}`;
+    } else {
+      return `${email.substring(0, maxLength - 3)}...`;
+    }
+  }
+
+  toggleTooltip(): void {
+    this.showTooltip = !this.showTooltip;
+
+    if (this.showTooltip) {
+      setTimeout(() => {
+        this.showTooltip = false;
+      }, 3000);
     }
   }
 }
