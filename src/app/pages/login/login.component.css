@@ -1,252 +1,193 @@
-:host {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  min-height: 100dvh;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-    url("../../../public/Background/login-bg.jpg") center/cover;
-}
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
+import { SupabaseService } from '../../services/supabase/supabase.service';
+import { RouterModule, Router } from '@angular/router';
+import { FooterComponent } from 'app/components/footer/footer.component';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
 
-.form-login {
-  display: flex;
-  flex-direction: column;
-  min-width: 700px;
-  margin: auto;
-  padding: 2rem;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  animation: fadeIn 1s ease-out;
-}
 
-label {
-  margin-bottom: 0.5rem;
-  color: white;
-  font-weight: 500;
-  font-size: 1rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
+@Component({
+  selector: 'app-login',
+  standalone: true,
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css'],
+  imports: [CommonModule, FormsModule, RouterModule, FooterComponent, NavbarComponent],
+})
+export class LoginComponent {
+  email = '';
+  password = '';
+  mensaje = '';
+  isLoading = false;
+  correoNoConfirmado = false;
 
-input {
-  padding: 12px 15px;
-  margin-bottom: 1.5rem;
-  border: none;
-  border-radius: 50px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #333;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+  emailError = false;
+  passwordError = false;
 
-input:focus {
-  outline: none;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.5);
-}
+  showRecuperar = false;
+  recEmail = '';
+  recMensaje = '';
+  recIsLoading = false;
 
-.btn-login {
-  padding: 15px 30px;
-  background-color: #ff6b6b;
-  color: white;
-  border: none;
-  border-radius: 50px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 1rem;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-}
+  constructor(
+    private supabaseService: SupabaseService,
+    private router: Router
+  ) {}
 
-.btn-login:hover {
-  background-color: #ff5252;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 82, 82, 0.4);
-}
+  async login(form: NgForm) {
+    if (form.invalid) {
+      this.mensaje = 'Por favor ingresa tus datos correctamente';
+      Object.values(form.controls).forEach((c) => c.markAsTouched());
+      return;
+    }
 
-.recuperar-container {
-  margin-top: 15px;
-  text-align: center;
-}
+    this.isLoading = true;
+    this.mensaje = '';
+    this.correoNoConfirmado = false;
 
-.btn-recuperar {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.8);
-  text-decoration: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-  margin-top: 1rem;
-}
+    try {
+      const loginResult = await this.supabaseService.loginUsuario(
+        this.email,
+        this.password
+      );
+      if (!loginResult) {
+        this.mensaje = '❌ Email o contraseña incorrectos';
+        this.isLoading = false;
+        return;
+      }
 
-.btn-recuperar:hover {
-  color: white;
-  text-decoration: underline;
-}
+      const { data: userData, error: userError } = await this.supabaseService
+        .getClient()
+        .auth.getUser();
+      if (userError || !userData?.user) {
+        this.mensaje = '❌ Error al obtener usuario';
+        this.isLoading = false;
+        return;
+      }
 
-.mensaje-exito {
-  color: #4caf50;
-  background: rgba(76, 175, 80, 0.1);
-  padding: 1rem;
-  border-radius: 8px;
-  margin: 1rem 0;
-  border-left: 4px solid #4caf50;
-}
+      const user = userData.user;
 
-.mensaje-error {
-  color: #f44336;
-  background: rgba(244, 67, 54, 0.1);
-  padding: 1rem;
-  border-radius: 8px;
-  margin: 1rem 0;
-  border-left: 4px solid #f44336;
-}
+      if (!user.email_confirmed_at) {
+        this.mensaje = '❌ Debes confirmar tu correo antes de iniciar sesión.';
+        this.correoNoConfirmado = true;
+        this.isLoading = false;
+        return;
+      }
 
-.reenviar-btn {
-  background: transparent;
-  color: #ff9800;
-  border: 1px solid #ff9800;
-  padding: 8px 16px;
-  border-radius: 50px;
-  margin-top: 1rem;
-  transition: all 0.3s ease;
-}
+      const session = await this.supabaseService.getSession();
+      if (!session) {
+        this.mensaje = '❌ Error al obtener sesión';
+        this.isLoading = false;
+        return;
+      }
 
-.reenviar-btn:hover {
-  background: rgba(255, 152, 0, 0.1);
-}
+      const userId = session.user.id;
 
-.input-error {
-  color: #ff6b6b;
-  font-size: 0.85rem;
-  margin-bottom: 0.5rem;
-}
+      // Usamos getPerfilUsuario para obtener el perfil completo, incluyendo el rol
+      const perfil = await this.supabaseService.getPerfilUsuario(userId);
+      if (!perfil) {
+        const nuevoPerfil = {
+          id: user.id,
+          nombre: user.user_metadata?.['full_name'] || 'Sin nombre',
+          correo: user.email!,
+          rol: 'cliente',
+          edad: 18,
+        };
 
-.mensaje-global {
-  margin-top: 1rem;
-  text-align: center;
-}
+        try {
+          await this.supabaseService.insertarPerfilUsuario(nuevoPerfil);
+          console.log('✅ Perfil creado automáticamente en tabla usuarios.');
+        } catch (insertError) {
+          console.warn('⚠️ Error al insertar perfil:', insertError);
+        }
+      }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+      // Obtener el rol del perfil correctamente (accedemos al valor 'rol' del objeto)
+      const rol = perfil?.rol; // Accedemos directamente al rol del perfil
+      if (!rol) {
+        this.mensaje = '❌ No se pudo obtener el rol del usuario';
+        this.isLoading = false;
+        return;
+      }
+
+      switch (rol) {
+        case 'admin':
+          this.router.navigate(['/dashboard']);
+          break;
+        case 'cliente':
+          this.router.navigate(['/home']);
+          break;
+        default:
+          this.router.navigate(['/']);
+          break;
+      }
+    } catch (error: any) {
+      console.error('Error en login:', error);
+      this.mensaje = this.getErrorMessage(error);
+    } finally {
+      this.isLoading = false;
+    }
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  private getErrorMessage(error: any): string {
+    if (error.message.includes('Invalid login credentials')) {
+      return '❌ Credenciales incorrectas';
+    }
+    if (error.message.includes('Email not confirmed')) {
+      this.correoNoConfirmado = true;
+      return '❌ Confirma tu email primero.';
+    }
+    return '❌ Error al iniciar sesión. Intenta nuevamente.';
+  }
+
+  async reenviarCorreo() {
+    if (!this.email) {
+      this.mensaje = '❌ Ingresa tu email primero';
+      return;
+    }
+
+    this.isLoading = true;
+    try {
+      await this.supabaseService.reenviarCorreoConfirmacion(this.email);
+      this.mensaje =
+        '📨 Correo de confirmación reenviado. Revisa tu bandeja de entrada.';
+      this.correoNoConfirmado = false;
+    } catch (error) {
+      console.error('Error al reenviar correo:', error);
+      this.mensaje = '❌ Error al reenviar el correo. Verifica tu email.';
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  abrirRecuperar() {
+    this.recEmail = '';
+    this.recMensaje = '';
+    this.recIsLoading = false;
+    this.showRecuperar = true;
+  }
+
+  cerrarRecuperar() {
+    this.showRecuperar = false;
+  }
+
+  // ——— Método de recuperación ———
+  async enviarRecuperacion() {
+    if (!this.recEmail) {
+      this.recMensaje = '❌ Por favor ingresa un correo electrónico.';
+      return;
+    }
+    this.recIsLoading = true;
+    this.recMensaje = '';
+    try {
+      await this.supabaseService.recuperarContrasena(this.recEmail);
+      this.recMensaje = '📨 Se envió un correo para recuperar la contraseña.';
+    } catch {
+      this.recMensaje = '❌ Error al enviar el correo. Verifica el email.';
+    } finally {
+      this.recIsLoading = false;
+    }
   }
 }
 
-.recuperar-page .recuperar-form {
-  display: flex;
-  flex-direction: column;
-  min-width: 700px;
-  margin: auto;
-  padding: 2rem;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  animation: fadeIn 1s ease-out;
-}
-
-.recuperar-form h2 {
-  margin-bottom: 1.5rem;
-  color: white;
-  font-size: 1.5rem;
-  text-align: center;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-.recuperar-form label {
-  margin-bottom: 0.5rem;
-  color: white;
-  font-weight: 500;
-  font-size: 1rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-.recuperar-form input {
-  padding: 12px 15px;
-  margin-bottom: 1.5rem;
-  border: none;
-  border-radius: 50px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #333;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.recuperar-form input:focus {
-  outline: none;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.5);
-}
-
-.recuperar-form button[type="submit"] {
-  padding: 15px 30px;
-  background-color: #ff6b6b;
-  color: white;
-  border: none;
-  border-radius: 50px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 1rem;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-}
-
-.recuperar-form button[type="submit"]:hover {
-  background-color: #ff5252;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 82, 82, 0.4);
-}
-
-.volver-btn {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.8);
-  text-decoration: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-  margin-top: 1rem;
-}
-
-.volver-btn:hover {
-  color: white;
-  text-decoration: underline;
-}
-
-.recuperar-form p {
-  margin-top: 1rem;
-}
-
-.mensaje-exito,
-.mensaje-error {
-  margin: 1rem 0;
-}
-
-.login-page {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 100dvh;
-  width: 100%;
-}
-
-.login-page > form,
-.login-page > .recuperar-page {
-  margin: auto;
-}
+export default LoginComponent;
