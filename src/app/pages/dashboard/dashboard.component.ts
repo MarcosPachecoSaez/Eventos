@@ -17,6 +17,7 @@ export class DashboardComponent implements OnInit {
   usuario: string | null = null;
   rol: 'admin' | 'cliente' | null = null;
   cargando = false;
+  showTooltip = false;
 
   eventos: any[] = [];
   todosLosEventos: any[] = [];
@@ -29,7 +30,7 @@ export class DashboardComponent implements OnInit {
     private supabaseService: SupabaseService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   async ngOnInit() {
     const user = await this.supabaseService.getUser();
@@ -67,6 +68,14 @@ export class DashboardComponent implements OnInit {
 
   irACrearEvento() {
     this.router.navigate(['/crear-evento']);
+  }
+
+  irAEntradas() {
+    this.router.navigate(['/mis-entradas']);
+  }
+
+  irAPerfil() {
+    this.router.navigate(['/perfil']);
   }
 
   irABuscarEventos() {
@@ -123,6 +132,47 @@ export class DashboardComponent implements OnInit {
     this.filtroCategoria = '';
     this.filtroFecha = '';
     this.eventos = [...this.todosLosEventos];
+  }
+
+  getDisplayName(): string {
+    if (!this.usuario) return 'Usuario';
+    
+    // Si es un email, truncarlo
+    if (this.usuario.includes('@')) {
+      return this.truncateEmail(this.usuario);
+    }
+    
+    // Si no es email, mostrar como está
+    return this.usuario;
+  }
+
+  truncateEmail(email: string): string {
+    const maxLength = 22;
+    
+    if (email.length <= maxLength) {
+      return email;
+    }
+    
+    const [localPart, domain] = email.split('@');
+    const availableLength = maxLength - domain.length - 4; // 4 para "...@"
+    
+    if (availableLength > 0) {
+      return `${localPart.substring(0, availableLength)}...@${domain}`;
+    } else {
+      // Si el dominio es muy largo, truncar todo
+      return `${email.substring(0, maxLength - 3)}...`;
+    }
+  }
+
+  toggleTooltip(): void {
+    this.showTooltip = !this.showTooltip;
+    
+    // Auto-hide después de 3 segundos
+    if (this.showTooltip) {
+      setTimeout(() => {
+        this.showTooltip = false;
+      }, 3000);
+    }
   }
 }
 
