@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 import { RouterModule, Router } from '@angular/router';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.css'],
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, NavbarComponent],
 })
 export class RegistroComponent {
   public errores = {
