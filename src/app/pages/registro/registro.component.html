@@ -1,7 +1,12 @@
-<div class="registro-container">
-  <h2>Crear cuenta</h2>
+<app-navbar></app-navbar>
 
-  <form #form="ngForm" (ngSubmit)="registrar(form)">
+<div class="page-wrapper">
+  <div class="registro-container">
+    <div class="header-icon">👤</div>
+    <h2>Crear cuenta</h2>
+    <p class="subtitle">Únete a la mejor plataforma de eventos</p>
+
+    <form #form="ngForm" (ngSubmit)="registrar(form)">
     <div class="campo">
       <label for="nombre">Nombre:</label>
       <input
@@ -64,10 +69,11 @@
       />
     </div>
 
-    <button type="submit" [disabled]="form.invalid">Registrarse</button>
+    <button type="submit" [disabled]="form.invalid">🚀 Registrarse</button>
 
     <div *ngIf="registroExitoso" class="exito">
       ✅ Registro exitoso. Revisa tu correo para confirmar la cuenta.
     </div>
   </form>
+  </div>
 </div>
