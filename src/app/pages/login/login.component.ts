@@ -4,13 +4,15 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 import { RouterModule, Router } from '@angular/router';
 import { FooterComponent } from 'app/components/footer/footer.component';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [CommonModule, FormsModule, RouterModule, FooterComponent],
+  imports: [CommonModule, FormsModule, RouterModule, FooterComponent, NavbarComponent],
 })
 export class LoginComponent {
   email = '';
