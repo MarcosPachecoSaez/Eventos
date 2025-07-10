@@ -1,58 +1,163 @@
 <app-navbar></app-navbar>
+
 <div class="background">
   <div class="perfil-container">
-    <h2>Mi Perfil</h2>
-
-    <div class="perfil-info">
-      <p><strong>Correo:</strong> {{ correo }}</p>
-
-      <p><strong>Nombre:</strong> {{ nombre }}</p>
-
-      <!-- Botón para activar edición -->
-      <button (click)="modoEdicion = !modoEdicion">
-        {{ modoEdicion ? "Cancelar edición" : "Editar nombre" }}
-      </button>
-
-      <!-- Campo editable solo si está en modo edición -->
-      <div *ngIf="modoEdicion">
-        <label>
-          Nuevo nombre:
-          <input type="text" [(ngModel)]="nuevoNombre" />
-        </label>
-        <button (click)="guardarCambios()">Guardar cambios</button>
-      </div>
-
-      <label>
-        Edad:
-        <input type="number" [(ngModel)]="nuevaEdad" />
-      </label>
-
-      <button (click)="guardarCambios()">Guardar cambios</button>
-    </div>
-
-    <hr />
-
-    <div class="historial-compras">
-      <h3>Historial de eventos comprados</h3>
-
-      <div *ngIf="entradas.length === 0">
-        <p>
-          No has comprado entradas aún.
-          <a [routerLink]="['/eventos']" class="link-estilo">Mira aqui</a> los
-          eventos disponibles
+    <div class="perfil-card">
+      <div class="perfil-header">
+        <h2>👤 Mi Perfil</h2>
+        <p class="perfil-subtitle">
+          Gestiona tu información personal y revisa tu historial
         </p>
       </div>
 
-      <div *ngFor="let ticket of entradas" class="entrada-card">
-        <p><strong>Evento:</strong> {{ ticket.eventos.nombre }}</p>
-        <p><strong>Fecha:</strong> {{ ticket.eventos.fecha | date }}</p>
-        <p><strong>Cantidad:</strong> {{ ticket.cantidad }}</p>
-        <p>
-          <strong>Total pagado:</strong> ${{
-            ticket.eventos.precio * ticket.cantidad
-          }}
-        </p>
-        <hr />
+      <div class="perfil-info">
+        <div class="info-group">
+          <div class="info-item">
+            <span class="info-icon">📧</span>
+            <span class="info-label">Correo:</span>
+            <span class="info-value">
+              <span class="email-container">
+                <span
+                  class="email-truncated"
+                  (click)="toggleTooltip()"
+                  [title]="correo"
+                  >{{ getDisplayEmail() }}</span
+                >
+                <div class="email-tooltip" [class.show]="showTooltip">
+                  {{ correo }}
+                </div>
+              </span>
+            </span>
+          </div>
+
+          <div class="info-item">
+            <span class="info-icon">👤</span>
+            <span class="info-label">Nombre:</span>
+            <span class="info-value">
+              <span class="email-container">
+                <span
+                  class="email-truncated"
+                  (click)="toggleTooltip()"
+                  [title]="nombre"
+                  >{{ getDisplayName() }}</span
+                >
+                <div class="email-tooltip" [class.show]="showTooltip">
+                  {{ nombre }}
+                </div>
+              </span>
+            </span>
+          </div>
+
+          <div class="info-item">
+            <span class="info-icon">🎂</span>
+            <span class="info-label">Edad:</span>
+            <span class="info-value"
+              >{{ nuevaEdad || 'No especificada' }}</span
+            >
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button
+            class="btn btn-primary"
+            (click)="modoEdicion = !modoEdicion"
+          >
+            {{ modoEdicion ? "❌ Cancelar" : "✏️ Editar Perfil" }}
+          </button>
+        </div>
+
+        <div *ngIf="modoEdicion" class="edit-section">
+          <h4>✏️ Editar Información</h4>
+
+          <div class="form-group">
+            <label for="nuevoNombre">Nuevo nombre:</label>
+            <input
+              type="text"
+              id="nuevoNombre"
+              [(ngModel)]="nuevoNombre"
+              placeholder="Ingresa tu nuevo nombre"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="nuevaEdad">Edad:</label>
+            <input
+              type="number"
+              id="nuevaEdad"
+              [(ngModel)]="nuevaEdad"
+              placeholder="Ingresa tu edad"
+              min="18"
+            />
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary" (click)="guardarCambios()">
+              💾 Guardar Cambios
+            </button>
+            <button
+              class="btn btn-secondary"
+              (click)="modoEdicion = false"
+            >
+              🚫 Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="historial-compras">
+        <div class="historial-header">
+          <h3>🎫 Historial de Eventos</h3>
+          <span class="historial-icon">📊</span>
+        </div>
+
+        <div *ngIf="entradas.length === 0" class="empty-state">
+          <div class="empty-icon">🎭</div>
+          <p>No has comprado entradas aún.</p>
+          <p>
+            <a [routerLink]="['/eventos']" class="link-estilo">
+              🔍 Explorar eventos disponibles
+            </a>
+          </p>
+        </div>
+
+        <div *ngFor="let ticket of entradas" class="entrada-card">
+          <div class="entrada-header">
+            <h4 class="entrada-titulo">{{ ticket.eventos.nombre }}</h4>
+            <div class="entrada-precio">
+              ${{ ticket.eventos.precio * ticket.cantidad | number }}
+            </div>
+          </div>
+
+          <div class="entrada-details">
+            <div class="entrada-detail">
+              <span class="icon">📅</span>
+              <span class="value"
+                >{{ ticket.eventos.fecha | date:'dd/MM/yyyy' }}</span
+              >
+            </div>
+
+            <div class="entrada-detail">
+              <span class="icon">📍</span>
+              <span class="value">{{ ticket.eventos.lugar }}</span>
+            </div>
+
+            <div class="entrada-detail">
+              <span class="icon">🎫</span>
+              <span class="value"
+                >{{ ticket.cantidad }} entrada{{ ticket.cantidad > 1 ? 's' : '' }}
+              </span>
+            </div>
+
+            <div class="entrada-detail">
+              <span class="icon">💰</span>
+              <span class="value"
+                >Total: ${{ ticket.eventos.precio * ticket.cantidad | number }}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
