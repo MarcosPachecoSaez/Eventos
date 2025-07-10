@@ -1,68 +1,114 @@
+<app-navbar></app-navbar>
+
 <div class="login-page">
-  <form
-    *ngIf="!showRecuperar"
-    #loginForm="ngForm"
-    (ngSubmit)="login(loginForm)"
-    class="form-login"
-    novalidate
-  >
-    <label for="email">Correo:</label>
-    <input type="email" id="email" name="email" [(ngModel)]="email" required />
-    <div *ngIf="emailError" class="input-error">{{ emailError }}</div>
+  <div class="login-container">
+    <!-- Formulario de Login Principal -->
+    <form
+      *ngIf="!showRecuperar"
+      #loginForm="ngForm"
+      (ngSubmit)="login(loginForm)"
+      class="form-login"
+      novalidate
+    >
+      <div class="form-header">
+        <div class="header-icon">🔐</div>
+        <h2>Iniciar Sesión</h2>
+        <p class="subtitle">Accede a tu cuenta de eVentos</p>
+      </div>
 
-    <label for="password">Contraseña:</label>
-    <input
-      type="password"
-      id="password"
-      name="password"
-      [(ngModel)]="password"
-      required
-    />
-    <div *ngIf="passwordError" class="input-error">{{ passwordError }}</div>
+      <div class="form-content">
+        <div class="form-group">
+          <label for="email">✉️ Correo electrónico:</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            [(ngModel)]="email" 
+            required 
+            placeholder="tu@correo.com"
+            autocomplete="email"
+          />
+          <div *ngIf="emailError" class="input-error">{{ emailError }}</div>
+        </div>
 
-    <button type="submit" class="btn-login">Iniciar Sesión</button>
+        <div class="form-group">
+          <label for="password">🔑 Contraseña:</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="password"
+            required
+            placeholder="Tu contraseña"
+            autocomplete="current-password"
+          />
+          <div *ngIf="passwordError" class="input-error">{{ passwordError }}</div>
+        </div>
 
-    <div *ngIf="mensaje" class="input-error mensaje-global">
-      {{ mensaje }}
-    </div>
+        <button type="submit" class="btn-login" [disabled]="isLoading">
+          <span *ngIf="!isLoading">🚀 Iniciar Sesión</span>
+          <span *ngIf="isLoading">⏳ Iniciando...</span>
+        </button>
 
-    <div class="recuperar-container">
-      <button type="button" class="btn-recuperar" (click)="abrirRecuperar()">
-        ¿Olvidaste tu contraseña?
-      </button>
-    </div>
+        <div *ngIf="mensaje" class="mensaje-global" [class.mensaje-exito]="mensaje.includes('📨')">
+          {{ mensaje }}
+        </div>
 
-    <div *ngIf="mensaje.includes('no está confirmado')">
-      <button (click)="reenviarCorreo()">
-        Reenviar correo de confirmación
-      </button>
-    </div>
-  </form>
+        <div class="recuperar-container">
+          <button type="button" class="btn-recuperar" (click)="abrirRecuperar()">
+            ❓ ¿Olvidaste tu contraseña?
+          </button>
+        </div>
 
-  <div *ngIf="showRecuperar" class="recuperar-page">
-    <form class="recuperar-form" (ngSubmit)="enviarRecuperacion()">
-      <h2>Recuperar contraseña</h2>
+        <div *ngIf="correoNoConfirmado" class="reenvio-container">
+          <button type="button" class="reenviar-btn" (click)="reenviarCorreo()" [disabled]="isLoading">
+            📨 Reenviar correo de confirmación
+          </button>
+        </div>
+      </div>
+    </form>
 
-      <label for="recEmail">Correo electrónico:</label>
-      <input
-        type="email"
-        id="recEmail"
-        name="recEmail"
-        [(ngModel)]="recEmail"
-        required
-        autocomplete="email"
-      />
+    <!-- Formulario de Recuperación -->
+    <form 
+      *ngIf="showRecuperar" 
+      class="recuperar-form"
+      (ngSubmit)="enviarRecuperacion()"
+    >
+      <div class="form-header">
+        <div class="header-icon">🔄</div>
+        <h2>Recuperar Contraseña</h2>
+        <p class="subtitle">Te enviaremos un enlace de recuperación</p>
+      </div>
 
-      <button type="submit" [disabled]="recIsLoading || !recEmail">
-        {{ recIsLoading ? "Enviando..." : "Enviar recuperación" }}
-      </button>
+      <div class="form-content">
+        <div class="form-group">
+          <label for="recEmail">✉️ Correo electrónico:</label>
+          <input
+            type="email"
+            id="recEmail"
+            name="recEmail"
+            [(ngModel)]="recEmail"
+            required
+            placeholder="tu@correo.com"
+            autocomplete="email"
+          />
+        </div>
 
-      <p *ngIf="recMensaje">{{ recMensaje }}</p>
+        <button type="submit" [disabled]="recIsLoading || !recEmail">
+          <span *ngIf="!recIsLoading">📤 Enviar recuperación</span>
+          <span *ngIf="recIsLoading">⏳ Enviando...</span>
+        </button>
 
-      <button type="button" (click)="cerrarRecuperar()" class="volver-btn">
-        Volver al login
-      </button>
+        <div *ngIf="recMensaje" class="mensaje-global" [class.mensaje-exito]="recMensaje.includes('📨')">
+          {{ recMensaje }}
+        </div>
+
+        <button type="button" (click)="cerrarRecuperar()" class="volver-btn">
+          ← Volver al login
+        </button>
+      </div>
     </form>
   </div>
-  <app-footer></app-footer>
 </div>
+
+<app-footer></app-footer>
