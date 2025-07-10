@@ -3,11 +3,12 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 import { CommonModule } from '@angular/common';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
 
 @Component({
   selector: 'app-editar-evento',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NavbarComponent],
   templateUrl: './editar-evento.component.html',
   styleUrls: ['./editar-evento.component.css']
 })
@@ -75,6 +76,10 @@ export class EditarEventoComponent implements OnInit {
       this.mensaje = '✅ Evento actualizado';
       this.router.navigate(['/dashboard']);
     }
+  }
+
+  volver() {
+    this.router.navigate(['/dashboard']);
   }
 }
 export default EditarEventoComponent ;
