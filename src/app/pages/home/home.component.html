@@ -2,15 +2,17 @@
 
 <section class="home-container">
   <div class="hero-section">
-    <h1 class="titulo" *ngIf="estaAutenticado; else mensajeGenerico">
-      Hola, {{ usuario.nombre }} <i class="fa-solid fa-play"></i>
-    </h1>
-    <ng-template #mensajeGenerico>
-      <h1 class="titulo">🎟️ Bienvenido a <span class="marca">eVentos</span></h1>
-    </ng-template>
-    <p class="subtitulo">
-      Vive la experiencia de los mejores eventos de la quinta región
-    </p>
+    <div class="hero-content">
+      <h1 class="titulo" *ngIf="estaAutenticado; else mensajeGenerico">
+        Hola, {{ usuario.nombre }} <i class="fa-solid fa-play"></i>
+      </h1>
+      <ng-template #mensajeGenerico>
+        <h1 class="titulo">🎟️ Bienvenido a <span class="marca">eVentos</span></h1>
+      </ng-template>
+      <p class="subtitulo">
+        Vive la experiencia de los mejores eventos de la quinta región
+      </p>
+    </div>
   </div>
 
   <app-carrusel [eventos]="eventos" [cargando]="cargando"></app-carrusel>
