@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+interface Destacado {
+  src: string;
+  pinLink: string;
+  instagramLink: string;
+}
+
 @Component({
   selector: 'app-destacados',
   standalone: true,
@@ -9,14 +15,30 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./destacados.component.css'],
 })
 export class DestacadosComponent implements OnInit {
-  images: string[] = [];
+  images: Destacado[] = [];
 
   ngOnInit(): void {
     this.images = [
-      'assets/lugares/1.jpg',
-      'assets/lugares/2.jpg',
-      'assets/lugares/3.jpg',
-      'assets/lugares/4.jpg',
+      {
+        src: 'assets/lugares/1.jpg',
+        pinLink: 'https://maps.app.goo.gl/WK9jzve2PN12EFVb9',
+        instagramLink: 'https://www.instagram.com/wooclub_/?hl=es',
+      },
+      {
+        src: 'assets/lugares/4.jpg',
+        pinLink: 'https://maps.app.goo.gl/WK9jzve2PN12EFVb9',
+        instagramLink: 'https://www.instagram.com/wooclub_/?hl=es',
+      },
+      {
+        src: 'assets/lugares/3.jpg',
+        pinLink: 'https://maps.app.goo.gl/AXhcXQzpsSeHTMHq8',
+        instagramLink: 'https://www.instagram.com/valparaiso_sporting/?hl=es',
+      },
+      {
+        src: 'assets/lugares/2.jpg',
+        pinLink: 'https://maps.app.goo.gl/AXhcXQzpsSeHTMHq8',
+        instagramLink: 'https://www.instagram.com/valparaiso_sporting/?hl=es',
+      },
     ];
   }
 }

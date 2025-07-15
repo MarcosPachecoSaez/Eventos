@@ -1,8 +1,25 @@
 <div class="destacados-container" *ngIf="images.length">
-    <h1>Conoce más el sitio</h1>
-    <ng-container *ngFor="let img of images">
-        <div class="img-container">
-            <img [src]="img" alt="Destacado" class="destacado-img" />
+  <h2>Conoce los lugares</h2>
+  <ng-container *ngFor="let item of images">
+    <div class="img-container">
+      <img [src]="item.src" alt="Destacado" class="destacado-img" />
+
+      <div class="overlay">
+        <a [href]="item.pinLink" target="_blank" aria-label="Ver en Google Maps">
+          <i class="fas fa-map-pin fa-2xl"></i>
+        </a>
+
+        <div class="separator">
+          <svg viewBox="0 0 30 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15,0 C30,50 0,50 15,100"
+                  stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
         </div>
-    </ng-container>
+
+        <a [href]="item.instagramLink" target="_blank" aria-label="Ver Instagram">
+          <i class="fab fa-instagram fa-2xl"></i>
+        </a>
+      </div>
+    </div>
+  </ng-container>
 </div>
