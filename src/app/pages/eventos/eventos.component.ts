@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { SupabaseService } from '../../services/supabase/supabase.service';
 
 @Component({
@@ -16,14 +16,27 @@ export class EventosComponent implements OnInit {
   mostrarModal: boolean = false;
   cargando: boolean = true;
   rol: 'admin' | 'cliente' | null = null;
+  evento: any = null;
 
   constructor(
     private supabaseService: SupabaseService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private supabase: SupabaseService
   ) {}
 
   async ngOnInit() {
     this.cargando = true;
+
+    this.route.paramMap.subscribe(async (params) => {
+      const slug = params.get('slug');
+      if (!slug) return;
+
+      const eventos = await this.supabase.getEventos();
+      this.evento = eventos.find((e) => this.slugify(e.nombre) === slug);
+
+      this.cargando = false;
+    });
 
     try {
       const session = await this.supabaseService.getSession();
@@ -84,5 +97,14 @@ export class EventosComponent implements OnInit {
 
   esCliente(): boolean {
     return this.rol === 'cliente';
+  }
+
+  slugify(text: string): string {
+    return text
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
   }
 }

@@ -1,0 +1,8 @@
+<div class="destacados-container" *ngIf="images.length">
+    <h1>Conoce más el sitio</h1>
+    <ng-container *ngFor="let img of images">
+        <div class="img-container">
+            <img [src]="img" alt="Destacado" class="destacado-img" />
+        </div>
+    </ng-container>
+</div>

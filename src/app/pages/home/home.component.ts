@@ -6,6 +6,7 @@ import { NavbarComponent } from 'app/components/navbar/navbar.component';
 import { CarruselComponent } from 'app/components/carrusel/carrusel.component';
 import { FooterComponent } from 'app/components/footer/footer.component';
 import { EventosComponent } from '../eventos/eventos.component';
+import { DestacadosComponent } from 'app/components/destacados/destacados.component';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +18,7 @@ import { EventosComponent } from '../eventos/eventos.component';
     CarruselComponent,
     EventosComponent,
     FooterComponent,
+    DestacadosComponent,
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
