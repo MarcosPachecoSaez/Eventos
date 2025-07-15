@@ -54,7 +54,6 @@ h2 {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(2, 1fr);
-
 }
 
 .card-evento {
@@ -98,7 +97,7 @@ h2 {
 }
 
 .card-evento:hover .imagen-evento {
-  transform: scale(1.15);
+  transform: scale(1.05);
 }
 
 .contenido-evento {
