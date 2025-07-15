@@ -66,6 +66,7 @@ h2 {
   background: #0000004b;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.219);
   cursor: pointer;
+  overflow: hidden;
 }
 
 .card-evento::before {
@@ -93,6 +94,11 @@ h2 {
   object-fit: cover;
   border: none;
   object-position: 50% 30%;
+  transition: transform 0.3s ease-in-out;
+}
+
+.card-evento:hover .imagen-evento {
+  transform: scale(1.15);
 }
 
 .contenido-evento {
