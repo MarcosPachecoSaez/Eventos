@@ -18,9 +18,15 @@
         alt="{{ evento.nombre }}"
         class="imagen-evento"
       />
-      <div class="contenido-evento">
-        <h3>{{ evento.nombre }}</h3>
-        <p>{{ evento.lugar }} - {{ evento.fecha | date : "longDate" }}</p>
+      <div class="card-container">
+        <div>
+          <i class="fas fa-ticket"></i>
+        </div>
+          <div class="contenido-evento">
+            <p class="direccion-evento">{{ evento.lugar }}</p>
+            <h2 class="titulo-evento">{{ evento.nombre }}</h2>
+            <p class="fecha-evento">{{ evento.fecha | date:'longDate' }}</p>
+          </div>
       </div>
     </div>
   </div>
