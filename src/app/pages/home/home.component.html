@@ -15,8 +15,20 @@
     </div>
   </div>
 
-  <app-carrusel [eventos]="eventos" [cargando]="cargando"></app-carrusel>
-  <app-eventos></app-eventos>
+<app-carrusel
+  [eventos]="eventos"
+  [cargando]="cargando">
+</app-carrusel>
+
+<div class="home-content">
+  <div class="eventos-section">
+    <app-eventos></app-eventos>
+  </div>
+
+  <div class="destacados-section">
+    <app-destacados></app-destacados>
+  </div>
+</div>
   <div *ngIf="!estaAutenticado" class="login-btn-container">
     <button class="login-btn" (click)="irALogin()">Iniciar sesión</button>
   </div>

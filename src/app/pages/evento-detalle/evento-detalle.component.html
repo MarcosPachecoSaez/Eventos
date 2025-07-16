@@ -1,22 +1,70 @@
 <app-navbar></app-navbar>
 
-<main class="detalle-container" *ngIf="evento">
-  <h2>{{ evento.nombre }}</h2>
-  <img *ngIf="evento.imagen_url" [src]="evento.imagen_url" alt="{{ evento.nombre }}" class="evento-img" />
-  <p><strong>Descripción:</strong> {{ evento.descripcion }}</p>
-  <p><strong>Fecha:</strong> {{ evento.fecha | date:'fullDate' }}</p>
-  <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
-  <p><strong>Categoría:</strong> {{ evento.categoria }}</p>
-  <p><strong>Precio:</strong> {{ evento.precio | currency:'CLP' }}</p>
+<main class="detalle-container">
+  <div *ngIf="cargando" class="cargando">Cargando evento…</div>
 
-  <!-- ✅ Botón solo visible para clientes autenticados -->
-  <button *ngIf="estaAutenticado && rol === 'cliente'" 
-          class="btn-comprar"
-          [routerLink]="['/compra', evento.id]">
-    Comprar entrada
+  <ng-container *ngIf="!cargando && evento" class="mega-container">
+    <div class="img-wrapper">
+    <img
+      *ngIf="evento.imagen_url"
+      [src]="evento.imagen_url"
+      alt="{{ evento.nombre }}"
+      class="evento-img"
+    />
+    </div>
+    <div class="detalle-texto">
+      <h2 class="titulo-evento">{{ evento.nombre }}</h2>
+      <p><strong>Descripción:</strong> {{ evento.descripcion }}</p>
+      <p><strong>Fecha:</strong> {{ evento.fecha | date:'fullDate' }}</p>
+      <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
+      <p><strong>Categoría:</strong> {{ evento.categoria }}</p>
+    </div>
+    <table class="tarifas-table" *ngIf="tarifas.length">
+  <thead>
+    <tr>
+      <th>Categoría</th>
+      <th>PRECIO</th>
+      <th>CARGO (15%)</th>
+      <th>TOTAL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let t of tarifas">
+      <th>{{ t.nombre }}</th>
+      <td>{{ t.precio  | currency:'CLP ':'symbol':'1.0-0' }}</td>
+      <td>{{ t.cargo   | currency:'CLP ':'symbol':'1.0-0' }}</td>
+      <td>{{ t.total   | currency:'CLP ':'symbol':'1.0-0' }}</td>
+    </tr>
+  </tbody>
+</table>
+    
+<div *ngIf="estaAutenticado && rol === 'cliente'" class="button-container">
+  <button
+    class="btn btn-moving-gradient btn-moving-gradient--blue"
+    (click)="comprar()"
+    [disabled]="navegando"
+  >
+    {{ navegando ? 'Navegando...' : 'Comprar entrada' }}
   </button>
+</div>
+    <div *ngIf="estaAutenticado && rol === 'admin'" class="botones-detalle">
+      <button (click)="volver()" class="volver-btn">⬅️ Volver</button>
+      <button class="btn-editar" (click)="volver()">Editar</button>
+      <button class="btn-eliminar" (click)="volver()">Eliminar</button>
+    </div>
+    <p *ngIf="!estaAutenticado" class="info-msg">
+      🔒 Inicia sesión para comprar entradas
+    </p>
 
-  <p *ngIf="!estaAutenticado" class="info-msg">🔒 Inicia sesión para comprar entradas</p>
+    <button *ngIf="!estaAutenticado" class="volver-btn" (click)="volver()">
+      ⬅️ Volver
+    </button>
+  </ng-container>
 
-  <button class="volver-btn" (click)="volver()">⬅️ Volver</button>
+  <div *ngIf="!cargando && !evento" class="no-encontrado">
+    Lo sentimos, no encontramos ese evento.
+    <button class="volver-btn" (click)="volver()">⬅️ Volver</button>
+  </div>
 </main>
+
+<app-footer></app-footer>

@@ -10,21 +10,23 @@
   (mouseenter)="pausado = true"
   (mouseleave)="pausado = false"
 >
-  <button class="arrow arrow-left" (click)="prev()">‹</button>
+  <button class="arrow arrow-left" (click)="prev()" [disabled]="!transitioning">‹</button>
 
   <div class="viewport">
-    <div
-      class="slides"
-      [style.transform]="'translateX(-' + centro * 100 + '%)'"
-    >
-      <!-- Cada wrapper ahora muestra su propia imagen -->
-      <div class="image-wrapper" *ngFor="let evt of eventos">
-        <img [src]="evt.imagen_url" [alt]="evt.nombre" />
-      </div>
-    </div>
+<div
+  class="slides"
+  [style.transition]="
+    transitioning ? 'transform 0.5s ease' : 'none'
+  "
+  [style.transform]="'translateX(-' + displayIndex * 100 + '%)'"
+  (transitionend)="onTransitionEnd()"
+>
+  <div class="image-wrapper" *ngFor="let slide of slides">
+    <img [src]="slide.imagen_url" [alt]="slide.nombre" />
+  </div>
+</div>
   </div>
 
-  <!-- Info del evento seleccionado, fuera del track .slides -->
   <div class="info">
     <h3>{{ eventos[centro].nombre }}</h3>
     <p>

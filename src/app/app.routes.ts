@@ -64,6 +64,15 @@ export const routes: Routes = [
     canActivate: [adminGuard],
   },
 
+  {
+    path: 'evento/:slug',
+    loadComponent: () =>
+      import('./pages/evento-detalle/evento-detalle.component').then(
+        (m) => m.EventoDetalleComponent
+      ),
+    canActivate: [MultiRoleGuard],
+  },
+
   // CLIENTE
   {
     path: 'eventos',
@@ -91,14 +100,6 @@ export const routes: Routes = [
   },
 
   // ADMIN o CLIENTE
-  {
-    path: 'evento/:id',
-    loadComponent: () =>
-      import('./pages/evento-detalle/evento-detalle.component').then(
-        (m) => m.default
-      ),
-    canActivate: [MultiRoleGuard],
-  },
 
   {
     path: 'no-autorizado',

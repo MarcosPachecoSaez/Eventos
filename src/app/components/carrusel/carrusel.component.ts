@@ -1,4 +1,3 @@
-// carrusel.component.ts
 import {
   Component,
   Input,
@@ -19,7 +18,9 @@ import { CommonModule } from '@angular/common';
 export class CarruselComponent implements OnInit, OnDestroy, OnChanges {
   @Input() eventos: any[] = [];
   @Input() cargando = false;
-
+  slides: any[] = [];
+  displayIndex = 1;
+  transitioning = true;
   centro = 0;
   intervaloCarrusel: any;
   pausado = false;
@@ -28,9 +29,17 @@ export class CarruselComponent implements OnInit, OnDestroy, OnChanges {
     if (this.eventos.length) this.iniciarRotacion();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['eventos'] && this.eventos.length) {
-      this.centro = 0;
+  ngOnChanges(ch: SimpleChanges) {
+    if (ch['eventos'] && this.eventos.length) {
+      // Prepara array con clones
+      this.slides = [
+        this.eventos[this.eventos.length - 1],
+        ...this.eventos,
+        this.eventos[0],
+      ];
+      this.displayIndex = 1;
+      this.transitioning = false;
+      setTimeout(() => (this.transitioning = true), 0);
       this.iniciarRotacion();
     }
   }
@@ -49,10 +58,23 @@ export class CarruselComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   next() {
-    this.centro = (this.centro + 1) % this.eventos.length;
+    this.displayIndex++;
   }
 
   prev() {
     this.centro = (this.centro - 1 + this.eventos.length) % this.eventos.length;
+  }
+
+  onTransitionEnd() {
+    // Si llegamos al clone final
+    if (this.displayIndex === this.slides.length - 1) {
+      this.transitioning = false; // desactiva transición
+      this.displayIndex = 1; // salta al primer slide real
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          this.transitioning = true; // reactiva transición
+        });
+      });
+    }
   }
 }

@@ -11,7 +11,7 @@
     <div
       class="card-evento"
       *ngFor="let evento of eventos"
-      (click)="abrirModal(evento)"
+      [routerLink]="['/evento', slugify(evento.nombre)]"
     >
       <img
         [src]="evento.imagen_url"
@@ -32,48 +32,40 @@
   </div>
 </div>
 
-  <!-- Modal fuera para hacerlo hermano de contenedor.principal-->
-  <div class="modal" *ngIf="mostrarModal">
-    <div class="modal-contenido">
-      <span class="cerrar" (click)="cerrarModal()">&times;</span>
-      <h2>{{ eventoSeleccionado?.nombre }}</h2>
-      <img
-        [src]="eventoSeleccionado?.imagen_url"
-        alt="{{ eventoSeleccionado?.nombre }}"
-        class="imagen-modal"
-      />
-      <p><strong>Descripción:</strong> {{ eventoSeleccionado?.descripcion }}</p>
-      <p>
-        <strong>Fecha:</strong>
-        {{ eventoSeleccionado?.fecha | date : "fullDate" }}
-      </p>
-      <p><strong>Lugar:</strong> {{ eventoSeleccionado?.lugar }}</p>
-      <p><strong>Categoría:</strong> {{ eventoSeleccionado?.categoria }}</p>
-      <p><strong>Precio:</strong> ${{ eventoSeleccionado?.precio }}</p>
+<div *ngIf="cargando">Cargando evento…</div>
 
-      <div class="botones-modal">
-        <!-- Admin -->
-        <ng-container *ngIf="esAdmin()">
-          <button (click)="editarEvento(eventoSeleccionado)" class="btn-editar">
-            Editar
-          </button>
-          <button
-            (click)="eliminarEvento(eventoSeleccionado.id)"
-            class="btn-eliminar"
-          >
-            Eliminar
-          </button>
-        </ng-container>
+<ng-container *ngIf="!cargando && evento">
+  <h2>{{ evento.nombre }}</h2>
 
-        <!-- Cliente -->
-        <ng-container *ngIf="esCliente()">
-          <button
-            [routerLink]="['/compra', eventoSeleccionado?.id]"
-            class="btn-comprar"
-          >
-            Comprar Entradas
-          </button>
-        </ng-container>
-      </div>
-    </div>
+  <img
+    [src]="evento.imagen_url"
+    alt="{{ evento.nombre }}"
+    class="imagen-modal"
+  />
+
+  <p><strong>Descripción:</strong> {{ evento.descripcion }}</p>
+  <p><strong>Fecha:</strong> {{ evento.fecha | date:'fullDate' }}</p>
+  <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
+  <p><strong>Categoría:</strong> {{ evento.categoria }}</p>
+  <p><strong>Precio:</strong> ${{ evento.precio }}</p>
+
+  <div class="botones-detalle">
+    <ng-container *ngIf="esAdmin()">
+      <button (click)="editarEvento(evento)" class="btn-editar">
+        Editar
+      </button>
+      <button (click)="eliminarEvento(evento.id)" class="btn-eliminar">
+        Eliminar
+      </button>
+    </ng-container>
+
+    <ng-container *ngIf="esCliente()">
+      <button
+        [routerLink]="['/compra', evento.id]"
+        class="btn-comprar"
+      >
+        Comprar Entradas
+      </button>
+    </ng-container>
   </div>
+</ng-container>
